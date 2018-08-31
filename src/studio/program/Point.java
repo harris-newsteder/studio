@@ -1,9 +1,9 @@
-package studio.program.entity;
+package studio.program;
 
-import javafx.scene.canvas.GraphicsContext;
-import studio.program.Program;
 
-public class Entity {
+// TODO: get rid of this class, I hate uneccesary function calls.......
+
+public class Point {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -11,60 +11,38 @@ public class Entity {
     /*
      *
      */
-    protected boolean alive = true;
+    private double x = 0;
 
     /*
      *
      */
-    protected Program program = null;
-
-    /*
-     *
-     */
-    protected String id = "entity";
-
-    /*
-     *
-     */
-    protected boolean hover = false;
+    private double y = 0;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public Entity(Program program) {
-        this.program = program;
+    public Point() {
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public void tick(double dt) {
-
+    public double getX() {
+        return x;
     }
 
-    public void draw(GraphicsContext gc) {
-
+    public double getY() {
+        return y;
     }
 
-    public String getId() {
-        return id;
+    public void setX(double x) {
+        this.x = x;
     }
 
-    public void kill() {
-        alive = false;
-    }
-
-    public boolean isAlive() {
-        return alive;
-    }
-
-    public void onEnter() {
-        hover = true;
-    }
-
-    public void onExit() {
-        hover = false;
+    public void setY(double y) {
+        this.y = y;
     }
 }

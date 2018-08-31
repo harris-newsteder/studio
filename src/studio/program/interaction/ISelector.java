@@ -2,10 +2,11 @@ package studio.program.interaction;
 
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import studio.program.Cursor;
 
-public class ISelector extends Interactor {
-    public ISelector(InteractionManager manager) {
-        super(manager);
+public class ISelector extends Interaction {
+    public ISelector(InteractionManager manager, Cursor cursor) {
+        super(manager, cursor);
     }
 
     @Override

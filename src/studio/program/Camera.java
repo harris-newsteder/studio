@@ -8,46 +8,49 @@ public class Camera {
     /*
      *
      */
-
-    public double x = 0;
-
-    /*
-     *
-     */
-    public double y = 0;
+    private Point center = null;
 
     /*
      *
      */
-    public double zoom = 1;
+    private Point translate = null;
 
     /*
      *
      */
-    public double tx = 0;
-
-    /*
-     *
-     */
-    public double ty = 0;
+    private double zoom = 1;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Camera() {
-
+        center = new Point();
+        translate = new Point();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    /*
-     *
-     */
-    public void calculateTransform(double canvasWidth, double canvasHeight) {
-        tx = x - (canvasWidth / (2 * zoom));
-        ty = y - (canvasHeight / (2 * zoom));
+    public void calculateTranslation(double width, double height) {
+        translate.setX(center.getX() - (width / (2 * zoom)));
+        translate.setY(center.getY() - (height / (2 * zoom)));
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public double getZoom() {
+        return zoom;
+    }
+
+    public Point getTranslate() {
+        return translate;
+    }
+
+    public Point getCenter() {
+        return center;
     }
 }

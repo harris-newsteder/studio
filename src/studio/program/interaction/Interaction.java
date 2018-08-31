@@ -2,12 +2,12 @@ package studio.program.interaction;
 
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import studio.program.Cursor;
 
-/*
- *
- */
-public abstract class Interactor {
+// TODO: remove uneccessary MouseEvent arguments
+// TODO: remove onMouseMoved and OnScroll and change to more standardized function calls: being, drag, end?????
 
+public abstract class Interaction {
     /*
      *
      */
@@ -18,9 +18,9 @@ public abstract class Interactor {
      */
     protected Cursor cursor = null;
 
-    public Interactor(InteractionManager manager) {
+    public Interaction(InteractionManager manager, Cursor cursor) {
         this.manager = manager;
-        this.cursor = manager.getCursor();
+        this.cursor = cursor;
     }
 
     public abstract void onMouseMoved(MouseEvent event);

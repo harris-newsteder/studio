@@ -1,165 +1,94 @@
 package studio.program;
 
-import javafx.geometry.VPos;
-import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
-import javafx.scene.paint.Color;
-import javafx.scene.text.TextAlignment;
-import studio.program.entity.Entity;
+import studio.App;
+import studio.program.element.Element;
+import studio.program.element.Sum;
 import studio.program.interaction.InteractionManager;
 
 import java.util.ArrayList;
 
 public class Program {
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static final double GRID_SIZE = 20.0;
 
-    public static final double GRID_SIZE = 20;
-
-    public static final Color COLOR_BLACK = Color.rgb(0, 0, 0);
-    public static final Color COLOR_WHITE = Color.rgb(255, 255, 255);
-    public static final Color COLOR_DARK  = Color.rgb(40, 40, 40);
-    public static final Color COLOR_LIGHT = Color.rgb(245, 245, 245);
-    public static final Color COLOR_HOVER = Color.rgb(255, 0, 0, 0.1);
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    /*
-     *
-     */
-    private ArrayList<Entity> entities = null;
-
-    /*
-     *
-     */
-    private Canvas canvas = null;
-
-    /*
-     *
-     */
+    private ArrayList<Element> elements = null;
     private Camera camera = null;
-
-    /*
-     *
-     */
+    private Cursor cursor = null;
+    private InteractionManager interactionManager = null;
+    private Canvas canvas = null;
     private GraphicsContext gc = null;
 
-    /*
-     *
-     */
-    private InteractionManager interactionManager = null;
-
-    /*
-     *
-     */
-    private LinkCandidate candidate = null;
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public Program(Canvas canvas) {
-        entities = new ArrayList<>();
-        this.canvas = canvas;
-        this.canvas.setCursor(Cursor.CROSSHAIR);
-        this.camera = new Camera();
-        this.gc = canvas.getGraphicsContext2D();
+    public Program() {
+        elements = new ArrayList<>();
+        camera = new Camera();
+        cursor = new Cursor();
         interactionManager = new InteractionManager(this);
-        candidate = new LinkCandidate();
-
-        canvas.setOnMouseMoved(event -> { onMouseMoved(event); });
-        canvas.setOnMousePressed(event -> { onMousePressed(event); });
-        canvas.setOnMouseReleased(event -> { onMouseReleased(event); });
-        canvas.setOnMouseDragged(event -> { onMouseDragged(event); });
-        canvas.setOnScroll(event -> { onScroll(event); });
+        addElement(new Sum());
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public void setCanvas(Canvas canvas) {
+        this.canvas = canvas;
+        this.gc = canvas.getGraphicsContext2D();
 
-    public void addEntity(Entity entity) {
-        entities.add(entity);
+        canvas.setOnMouseMoved(          event -> {onMouseMoved(event);});
+        canvas.setOnMousePressed(        event -> {onMousePressed(event);});
+        canvas.setOnMouseReleased(       event -> {onMouseReleased(event);});
+        canvas.setOnMouseDragged(        event -> {onMouseDragged(event);});
+        canvas.setOnScroll(              event -> {onScroll(event);});
+        canvas.setOnContextMenuRequested(event -> {onContextMenuRequested(event);});
     }
 
     public void tick(double dt) {
-        for (Entity entity : entities) {
-            entity.tick(dt);
+        for (Element e : elements) {
+            e.tick(dt);
         }
     }
 
     public void draw() {
-        gc.save();
+        if (canvas == null) return;
 
-        // clear canvas
-        gc.setFill(COLOR_LIGHT);
+        gc.save();
+        gc.setFill(App.COLOR_LIGHT);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-        // camera transform
-        camera.calculateTransform(canvas.getWidth(), canvas.getHeight());
-        gc.scale(camera.zoom, camera.zoom);
-        gc.translate(-camera.tx, -camera.ty);
+        camera.calculateTranslation(canvas.getWidth(), canvas.getHeight());
 
-        drawGrid();
+        // camera transformation
+        gc.scale(
+                camera.getZoom(),
+                camera.getZoom()
+        );
 
-        //
-        gc.setFill(COLOR_WHITE);
-        gc.setStroke(COLOR_DARK);
-        gc.setLineWidth(2.0);
-        gc.setTextAlign(TextAlignment.CENTER);
-        gc.setTextBaseline(VPos.CENTER);
+        gc.translate(
+                -camera.getTranslate().getX(),
+                -camera.getTranslate().getY()
+        );
 
-        for (Entity e : entities) {
+        for (Element e : elements) {
             e.draw(gc);
         }
 
-        candidate.draw(gc);
-
         gc.restore();
     }
 
-    public ArrayList<Entity> getEntities() {
-        return entities;
+    public void addElement(Element element) {
+        elements.add(element);
     }
 
-    public Camera getCamera() {
-        return camera;
+    public Cursor getCursor() {
+        return cursor;
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private void drawGrid() {
-        // don't bother drawing a bunch of tiny points if the camera is zoomed out too far
-        if (camera.zoom < 0.4) return;
-
-        // start position of the first point
-        double sx = Math.ceil(camera.tx / GRID_SIZE) * GRID_SIZE;
-        double sy = Math.ceil(camera.ty / GRID_SIZE) * GRID_SIZE;
-
-        // how many points to draw in the x and y directions
-        int nx = (int)Math.ceil((canvas.getWidth() / camera.zoom) / GRID_SIZE);
-        int ny = (int)Math.ceil((canvas.getWidth() / camera.zoom) / GRID_SIZE);
-
-        // draw all points
-        gc.save();
-        gc.setFill(COLOR_DARK);
-        for (int y = 0; y < ny; ++y) {
-            for (int x = 0; x < nx; ++x) {
-                gc.fillRect(sx + (x * GRID_SIZE), sy + (y * GRID_SIZE), 1, 1);
-            }
-        }
-        gc.restore();
+    public ArrayList<Element> getElements() {
+        return elements;
     }
 
     private void onMouseMoved(MouseEvent event) {
+        updateCursorPosition(event.getX(), event.getY());
         interactionManager.onMouseMoved(event);
     }
 
@@ -172,10 +101,27 @@ public class Program {
     }
 
     private void onMouseDragged(MouseEvent event) {
+        updateCursorPosition(event.getX(), event.getY());
         interactionManager.onMouseDragged(event);
     }
 
     private void onScroll(ScrollEvent event) {
         interactionManager.onScroll(event);
+    }
+
+    private void onContextMenuRequested(ContextMenuEvent event) {
+        interactionManager.onContextMenuRequested(event);
+    }
+
+    private void updateCursorPosition(double realX, double realY) {
+        cursor.setRealX(realX);
+        cursor.setRealY(realY);
+        cursor.setGraphX(camera.getTranslate().getX() + (realX / camera.getZoom()));
+        cursor.setGraphY(camera.getTranslate().getY() + (realY / camera.getZoom()));
+
+        cursor.getReal().setX(realX);
+        cursor.getReal().setX(realY);
+        cursor.getGraph().setX(camera.getTranslate().getX() + (realX / camera.getZoom()));
+        cursor.getGraph().setY(camera.getTranslate().getY() + (realY / camera.getZoom()));
     }
 }

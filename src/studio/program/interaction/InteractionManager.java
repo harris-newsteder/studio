@@ -1,18 +1,17 @@
 package studio.program.interaction;
 
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import studio.program.Cursor;
 import studio.program.Program;
-import studio.program.entity.Block;
-import studio.program.entity.Entity;
-import studio.program.entity.Link;
-import studio.program.entity.Pin;
+import studio.program.element.Block;
+import studio.program.element.Element;
+import studio.program.element.Link;
+import studio.program.element.Pin;
 
 import java.util.EnumMap;
 
-/*
- *
- */
 public class InteractionManager {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //
@@ -31,35 +30,16 @@ public class InteractionManager {
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    /*
-     *
-     */
     private Program program = null;
-
-    /*
-     *
-     */
-    private Collider collider = null;
-
-    /*
-     *
-     */
     private Cursor cursor = null;
-
-    /*
-     *
-     */
-    private Entity hover = null;
-
-    /*
-     *
-     */
+    private Element hover = null;
+    private Collider collider = null;
     private InteractionType type = InteractionType.NONE;
 
     /*
      *
      */
-    private EnumMap<InteractionType, Interactor> interactions = null;
+    private EnumMap<InteractionType, Interaction> interactions = null;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //
@@ -67,18 +47,16 @@ public class InteractionManager {
 
     public InteractionManager(Program program) {
         this.program = program;
-        this.cursor = new Cursor();
+        this.cursor = program.getCursor();
+        this.collider = new Collider();
 
-        collider = new Collider();
-        collider.setCursor(cursor);
-
-        interactions = new EnumMap<InteractionType, Interactor>(InteractionType.class);
-        interactions.put(InteractionType.NONE,       new INone(this));
-        interactions.put(InteractionType.BLOCK_DRAG, new IBlockDrag(this));
-        interactions.put(InteractionType.LINKER,     new ILinker(this));
-        interactions.put(InteractionType.LINK_DRAG,  new ILinkDrag(this));
-        interactions.put(InteractionType.SELECTION,  new ISelector(this));
-        interactions.put(InteractionType.CAMERA,     new ICamera(this));
+        interactions = new EnumMap<InteractionType, Interaction>(InteractionType.class);
+        interactions.put(InteractionType.NONE,       new INone(this, cursor));
+        interactions.put(InteractionType.BLOCK_DRAG, new IBlockDrag(this, cursor));
+        interactions.put(InteractionType.LINKER,     new ILinker(this, cursor));
+        interactions.put(InteractionType.LINK_DRAG,  new ILinkDrag(this, cursor));
+        interactions.put(InteractionType.SELECTION,  new ISelector(this, cursor));
+        interactions.put(InteractionType.CAMERA,     new ICamera(this, cursor));
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -86,16 +64,22 @@ public class InteractionManager {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void onMouseMoved(MouseEvent event) {
-        // check collision between the mouse and any entities
-        updateCursor(event.getX(), event.getY());
+        // TODO: move to collider
+        Element nh = null;
 
-        Entity coll = collider.checkCollisions(program.getEntities());
+        for (Element e : program.getElements()) {
 
-        if (coll == hover) return;
+            if (e.getShape().containsPoint(cursor.getGraph().getX(), cursor.getGraph().getY())) {
+                nh = e;
+            }
+        }
 
-        if (coll != null) coll.onEnter();
+        if (nh == hover) return;
+
+        // a change has occured
+        if (nh != null) nh.onEnter();
         if (hover != null) hover.onExit();
-        hover = coll;
+        hover = nh;
     }
 
     public void onMousePressed(MouseEvent event) {
@@ -107,7 +91,7 @@ public class InteractionManager {
                     type = InteractionType.SELECTION;
                 } else if (hover.getId() == Block.ID) {
                     type = InteractionType.BLOCK_DRAG;
-                // the user is clicking on an un-linked pin, going to make a new link between two pins
+                    // the user is clicking on an un-linked pin, going to make a new link between two pins
                 } else if (hover.getId() == Pin.ID) {
                     type = InteractionType.LINKER;
                 } else if (hover.getId() == Link.ID) {
@@ -126,38 +110,23 @@ public class InteractionManager {
 
     public void onMouseReleased(MouseEvent event) {
         interactions.get(type).onMouseReleased(event);
+
         type = InteractionType.NONE;
     }
 
     public void onMouseDragged(MouseEvent event) {
-        updateCursor(event.getX(), event.getY());
         interactions.get(type).onMouseDragged(event);
     }
 
     public void onScroll(ScrollEvent event) {
-        interactions.get(InteractionType.CAMERA).onScroll(event);
+
     }
 
-    public Program getProgram() {
-        return program;
+    public void onContextMenuRequested(ContextMenuEvent event) {
+
     }
 
-    public Entity getHover() {
+    public Element getHover() {
         return hover;
-    }
-
-    public Cursor getCursor() {
-        return cursor;
-    }
-
-    public Collider getCollider() {
-        return collider;
-    }
-
-    private void updateCursor(double rx, double ry) {
-        cursor.rx = rx;
-        cursor.ry = ry;
-        cursor.vx = program.getCamera().tx + (rx / program.getCamera().zoom);
-        cursor.vy = program.getCamera().ty + (ry / program.getCamera().zoom);
     }
 }

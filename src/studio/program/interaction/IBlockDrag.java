@@ -2,10 +2,12 @@ package studio.program.interaction;
 
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import studio.program.Cursor;
 import studio.program.Program;
-import studio.program.entity.Block;
+import studio.program.element.Block;
+import studio.program.shape.Rectangle;
 
-public class IBlockDrag extends Interactor {
+public class IBlockDrag extends Interaction {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -18,19 +20,24 @@ public class IBlockDrag extends Interactor {
     /*
      *
      */
-    private double dragStartX = 0;
+    private Rectangle dragShape = null;
 
     /*
      *
      */
-    private double dragStartY = 0;
+    private double dragOffsetX = 0;
+
+    /*
+     *
+     */
+    private double dragOffsetY = 0;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public IBlockDrag(InteractionManager manager) {
-        super(manager);
+    public IBlockDrag(InteractionManager manager, Cursor cursor) {
+        super(manager, cursor);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -45,9 +52,10 @@ public class IBlockDrag extends Interactor {
     @Override
     public void onMousePressed(MouseEvent event) {
         drag = (Block)manager.getHover();
-        dragStartX = drag.x;
-        dragStartY = drag.y;
-        cursor.beginViewDrag();
+        dragShape = (Rectangle)drag.getShape();
+        dragOffsetX = cursor.getGraphX() - dragShape.getX();
+        dragOffsetY = cursor.getGraphY() - dragShape.getY();
+        System.out.println("hooooooooweeeeeeeeee");
     }
 
     @Override
@@ -57,8 +65,8 @@ public class IBlockDrag extends Interactor {
 
     @Override
     public void onMouseDragged(MouseEvent event) {
-        drag.x = Math.round((dragStartX + cursor.getViewDeltaX()) / Program.GRID_SIZE) * Program.GRID_SIZE;
-        drag.y = Math.round((dragStartY + cursor.getViewDeltaY()) / Program.GRID_SIZE) * Program.GRID_SIZE;
+        dragShape.setX(cursor.getGraphX() - dragOffsetX);
+        dragShape.setY(cursor.getGraphY() - dragOffsetY);
     }
 
     @Override

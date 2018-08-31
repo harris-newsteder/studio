@@ -2,38 +2,12 @@ package studio.program.interaction;
 
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
-import studio.program.entity.Entity;
-import studio.program.entity.Pin;
+import studio.program.Cursor;
 
-/*
- *
- */
-public class ILinker extends Interactor {
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    /*
-     *
-     */
-    private Pin e1 = null;
-
-    /*
-     *
-     */
-    private Entity e2 = null;
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public ILinker(InteractionManager manager) {
-        super(manager);
+public class ILinker extends Interaction {
+    public ILinker(InteractionManager manager, Cursor cursor) {
+        super(manager, cursor);
     }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public void onMouseMoved(MouseEvent event) {
@@ -42,11 +16,7 @@ public class ILinker extends Interactor {
 
     @Override
     public void onMousePressed(MouseEvent event) {
-        e1 = (Pin)manager.getHover();
 
-        if (e1.linked) {
-            System.err.println("linker error: pin already linked!");
-        }
     }
 
     @Override
@@ -56,7 +26,7 @@ public class ILinker extends Interactor {
 
     @Override
     public void onMouseDragged(MouseEvent event) {
-        e2 = manager.getCollider().checkCollisions(manager.getProgram().getEntities());
+
     }
 
     @Override
