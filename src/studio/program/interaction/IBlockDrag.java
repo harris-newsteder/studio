@@ -3,9 +3,7 @@ package studio.program.interaction;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import studio.program.Cursor;
-import studio.program.Program;
 import studio.program.element.Block;
-import studio.program.shape.Rectangle;
 
 public class IBlockDrag extends Interaction {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -16,11 +14,6 @@ public class IBlockDrag extends Interaction {
      *
      */
     private Block drag = null;
-
-    /*
-     *
-     */
-    private Rectangle dragShape = null;
 
     /*
      *
@@ -52,10 +45,8 @@ public class IBlockDrag extends Interaction {
     @Override
     public void onMousePressed(MouseEvent event) {
         drag = (Block)manager.getHover();
-        dragShape = (Rectangle)drag.getShape();
-        dragOffsetX = cursor.getGraphX() - dragShape.getX();
-        dragOffsetY = cursor.getGraphY() - dragShape.getY();
-        System.out.println("hooooooooweeeeeeeeee");
+        dragOffsetX = cursor.getGraphX() - drag.getX();
+        dragOffsetY = cursor.getGraphY() - drag.getY();
     }
 
     @Override
@@ -65,8 +56,10 @@ public class IBlockDrag extends Interaction {
 
     @Override
     public void onMouseDragged(MouseEvent event) {
-        dragShape.setX(cursor.getGraphX() - dragOffsetX);
-        dragShape.setY(cursor.getGraphY() - dragOffsetY);
+        drag.setPosition(
+                cursor.getGraphX() - dragOffsetX,
+                cursor.getGraphY() - dragOffsetY
+        );
     }
 
     @Override

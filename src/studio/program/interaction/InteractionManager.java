@@ -68,8 +68,7 @@ public class InteractionManager {
         Element nh = null;
 
         for (Element e : program.getElements()) {
-
-            if (e.getShape().containsPoint(cursor.getGraph().getX(), cursor.getGraph().getY())) {
+            if (e.containsPoint(cursor.getGraphX(), cursor.getGraphY())) {
                 nh = e;
             }
         }
@@ -119,7 +118,8 @@ public class InteractionManager {
     }
 
     public void onScroll(ScrollEvent event) {
-
+        // TODO: hmmm
+        interactions.get(InteractionType.CAMERA).onScroll(event);
     }
 
     public void onContextMenuRequested(ContextMenuEvent event) {
@@ -128,5 +128,9 @@ public class InteractionManager {
 
     public Element getHover() {
         return hover;
+    }
+
+    public Program getProgram() {
+        return program;
     }
 }

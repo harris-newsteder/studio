@@ -8,12 +8,14 @@ public class Camera {
     /*
      *
      */
-    private Point center = null;
+    private double cx = 0;
+    private double cy = 0;
 
     /*
      *
      */
-    private Point translate = null;
+    private double tx = 0;
+    private double ty = 0;
 
     /*
      *
@@ -25,8 +27,7 @@ public class Camera {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Camera() {
-        center = new Point();
-        translate = new Point();
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -34,8 +35,8 @@ public class Camera {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void calculateTranslation(double width, double height) {
-        translate.setX(center.getX() - (width / (2 * zoom)));
-        translate.setY(center.getY() - (height / (2 * zoom)));
+        tx = cx - (width / (2 * zoom));
+        ty = cy - (height / (2 * zoom));
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -46,11 +47,32 @@ public class Camera {
         return zoom;
     }
 
-    public Point getTranslate() {
-        return translate;
+    public double getTranslateX() {
+        return tx;
     }
 
-    public Point getCenter() {
-        return center;
+    public double getTranslateY() {
+        return ty;
+    }
+
+    public double getCenterX() {
+        return cx;
+    }
+
+    public double getCenterY() {
+        return cy;
+    }
+
+    public void setCenter(double x, double y) {
+        this.cx = x;
+        this.cy = y;
+    }
+
+    public void setZoom(double zoom) {
+        this.zoom = zoom;
+    }
+
+    public void setCenter() {
+
     }
 }

@@ -7,6 +7,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import studio.App;
 import studio.program.element.Element;
+import studio.program.element.Pin;
 import studio.program.element.Sum;
 import studio.program.interaction.InteractionManager;
 
@@ -27,7 +28,11 @@ public class Program {
         camera = new Camera();
         cursor = new Cursor();
         interactionManager = new InteractionManager(this);
-        addElement(new Sum());
+
+        // TODO: remove
+        Sum s = new Sum();
+        addElement(s);
+        s.createPins(this);
     }
 
     public void setCanvas(Canvas canvas) {
@@ -64,9 +69,13 @@ public class Program {
         );
 
         gc.translate(
-                -camera.getTranslate().getX(),
-                -camera.getTranslate().getY()
+                -camera.getTranslateX(),
+                -camera.getTranslateY()
         );
+
+        gc.setFill(App.COLOR_WHITE);
+        gc.setStroke(App.COLOR_DARK);
+        gc.setLineWidth(2.0);
 
         for (Element e : elements) {
             e.draw(gc);
@@ -81,6 +90,10 @@ public class Program {
 
     public Cursor getCursor() {
         return cursor;
+    }
+
+    public Camera getCamera() {
+        return camera;
     }
 
     public ArrayList<Element> getElements() {
@@ -116,12 +129,7 @@ public class Program {
     private void updateCursorPosition(double realX, double realY) {
         cursor.setRealX(realX);
         cursor.setRealY(realY);
-        cursor.setGraphX(camera.getTranslate().getX() + (realX / camera.getZoom()));
-        cursor.setGraphY(camera.getTranslate().getY() + (realY / camera.getZoom()));
-
-        cursor.getReal().setX(realX);
-        cursor.getReal().setX(realY);
-        cursor.getGraph().setX(camera.getTranslate().getX() + (realX / camera.getZoom()));
-        cursor.getGraph().setY(camera.getTranslate().getY() + (realY / camera.getZoom()));
+        cursor.setGraphX(camera.getTranslateX() + (realX / camera.getZoom()));
+        cursor.setGraphY(camera.getTranslateY() + (realY / camera.getZoom()));
     }
 }

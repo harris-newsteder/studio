@@ -21,27 +21,11 @@ public class Cursor {
     private double gx = 0;
     private double gy = 0;
 
-    /*
-     * the real position of the cursor on the canvas
-     * x : [0, canvas.getWidth()]
-     * y : [0, canvas.getHeight()]
-     */
-    private Point real = null;
-
-    /*
-     * the position of the cursor on the graph
-     * x : [-inf, +inf]
-     * y : [-inf, +inf]
-     */
-    private Point graph = null;
-
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Cursor() {
-        real = new Point();
-        graph = new Point();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -78,23 +62,5 @@ public class Cursor {
 
     public void setRealY(double ry) {
         this.ry = ry;
-    }
-
-    // TODO: remove all below here
-
-    public Point getReal() {
-        return real;
-    }
-
-    public void setReal(Point real) {
-        this.real = real;
-    }
-
-    public Point getGraph() {
-        return graph;
-    }
-
-    public void setGraph(Point graph) {
-        this.graph = graph;
     }
 }
