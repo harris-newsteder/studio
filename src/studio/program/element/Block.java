@@ -76,9 +76,9 @@ public abstract class Block extends Element {
     @Override
     public boolean containsPoint(double x, double y) {
         if (x >= this.x - (width  / 2) &&
-                x <= this.x + (width  / 2) &&
-                y >= this.y - (height / 2) &&
-                y <= this.y + (height / 2)) {
+            x <= this.x + (width  / 2) &&
+            y >= this.y - (height / 2) &&
+            y <= this.y + (height / 2)) {
             return true;
         }
 
@@ -89,8 +89,7 @@ public abstract class Block extends Element {
     public void kill() {
         super.kill();
 
-        // when the block is moved all the pins "attached" to it need to update their own positions relative to their
-        // parent (i.e. this block)
+        // kill all pins attached to this block, we won't be needing them anymore
         for (Pin pin : pins) {
             pin.kill();
         }

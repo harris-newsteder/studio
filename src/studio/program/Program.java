@@ -34,6 +34,10 @@ public class Program {
         Sum s = new Sum();
         addElement(s);
         s.createPins(this);
+
+        s = new Sum();
+        addElement(s);
+        s.createPins(this);
     }
 
     public void setCanvas(Canvas canvas) {

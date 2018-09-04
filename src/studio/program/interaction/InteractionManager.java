@@ -67,7 +67,7 @@ public class InteractionManager {
     public InteractionManager(Program program) {
         this.program = program;
         this.cursor = program.getCursor();
-        this.collider = new Collider();
+        this.collider = new Collider(cursor, program.getElements());
 
         interactions = new EnumMap<InteractionType, Interaction>(InteractionType.class);
         interactions.put(InteractionType.NONE,       new INone(this, cursor));
@@ -84,13 +84,7 @@ public class InteractionManager {
 
     public void onMouseMoved(MouseEvent event) {
         // TODO: move to collider
-        Element nh = null;
-
-        for (Element e : program.getElements()) {
-            if (e.containsPoint(cursor.getGraphX(), cursor.getGraphY())) {
-                nh = e;
-            }
-        }
+        Element nh = collider.checkElements();
 
         if (nh == hover) return;
 
@@ -151,5 +145,9 @@ public class InteractionManager {
 
     public Program getProgram() {
         return program;
+    }
+
+    public Collider getCollider() {
+        return collider;
     }
 }
