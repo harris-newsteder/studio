@@ -1,6 +1,8 @@
 package studio.program.element;
 
+import javafx.geometry.VPos;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.text.TextAlignment;
 import studio.App;
 import studio.program.Program;
 
@@ -10,19 +12,49 @@ import java.util.ArrayList;
  * a block is a rectangular element that has pins
  */
 public abstract class Block extends Element {
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     public static final String ID = "block";
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /*
+     *
+     */
     protected ArrayList<Pin> pins = null;
 
+    /*
+     *
+     */
     protected double width = 80;
 
+    /*
+     *
+     */
     protected double height = 80;
+
+    /*
+     *
+     */
+    protected String text = "";
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Block() {
         super();
         id = ID;
         pins = new ArrayList<>();
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public void draw(GraphicsContext gc) {
@@ -34,6 +66,10 @@ public abstract class Block extends Element {
             gc.setFill(App.COLOR_HOVER_MASK);
             gc.fillRect(-width / 2, -height / 2, width, height);
         }
+        gc.setTextAlign(TextAlignment.CENTER);
+        gc.setTextBaseline(VPos.CENTER);
+        gc.setFill(App.COLOR_DARK);
+        gc.fillText(text, 0, 0);
         gc.restore();
     }
 
@@ -50,10 +86,23 @@ public abstract class Block extends Element {
     }
 
     @Override
+    public void kill() {
+        super.kill();
+
+        // when the block is moved all the pins "attached" to it need to update their own positions relative to their
+        // parent (i.e. this block)
+        for (Pin pin : pins) {
+            pin.kill();
+        }
+    }
+
+    @Override
     public void setPosition(double x, double y) {
         this.x = x;
         this.y = y;
 
+        // when the block is moved all the pins "attached" to it need to update their own positions relative to their
+        // parent (i.e. this block)
         for (Pin pin : pins) {
             pin.updatePosition();
         }

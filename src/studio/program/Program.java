@@ -12,6 +12,7 @@ import studio.program.element.Sum;
 import studio.program.interaction.InteractionManager;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Program {
     public static final double GRID_SIZE = 20.0;
@@ -48,8 +49,16 @@ public class Program {
     }
 
     public void tick(double dt) {
-        for (Element e : elements) {
+        Iterator i = elements.iterator();
+
+        while (i.hasNext()) {
+            Element e = (Element)i.next();
             e.tick(dt);
+
+            // remove all dead elements from the list
+            if (!e.isAlive()) {
+                i.remove();
+            }
         }
     }
 

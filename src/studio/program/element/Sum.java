@@ -5,6 +5,7 @@ import studio.program.Program;
 public class Sum extends Block {
     public Sum() {
         super();
+        text = "SUM";
     }
 
     @Override

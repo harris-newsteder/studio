@@ -2,6 +2,7 @@ package studio;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.concurrent.Task;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.Pane;
@@ -15,6 +16,8 @@ public class App extends Application {
     public static final Color COLOR_WHITE = Color.rgb(255, 255, 255);
     public static final Color COLOR_BLACK = Color.rgb(0, 0, 0);
     public static final Color COLOR_HOVER_MASK = Color.rgb(255, 0, 0, 0.1);
+
+    private boolean running = true;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -31,6 +34,19 @@ public class App extends Application {
 
         Scene primaryScene = new Scene(root);
 
+        Task<Void> backendTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                while (running) {
+                    // TODO: delta time calculation
+                    program.tick(0.0);
+                    Thread.sleep(0, 500000);
+                }
+                return null;
+            }
+        };
+        new Thread(backendTask).start();
+
         // start the thread which updates the javafx canvas at ~60 fps
         AnimationTimer drawTask = new AnimationTimer() {
             @Override
@@ -45,7 +61,7 @@ public class App extends Application {
         primaryStage.setHeight(720);
         primaryStage.setTitle("Logica Studio");
         primaryStage.setOnCloseRequest(event -> {
-
+            running = false;
         });
         primaryStage.show();
     }

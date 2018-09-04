@@ -30,10 +30,29 @@ public class InteractionManager {
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /*
+     *
+     */
     private Program program = null;
+
+    /*
+     *
+     */
     private Cursor cursor = null;
+
+    /*
+     *
+     */
     private Element hover = null;
+
+    /*
+     *
+     */
     private Collider collider = null;
+
+    /*
+     *
+     */
     private InteractionType type = InteractionType.NONE;
 
     /*
@@ -90,7 +109,7 @@ public class InteractionManager {
                     type = InteractionType.SELECTION;
                 } else if (hover.getId() == Block.ID) {
                     type = InteractionType.BLOCK_DRAG;
-                    // the user is clicking on an un-linked pin, going to make a new link between two pins
+                // the user is clicking on an un-linked pin, going to make a new link between two pins
                 } else if (hover.getId() == Pin.ID) {
                     type = InteractionType.LINKER;
                 } else if (hover.getId() == Link.ID) {

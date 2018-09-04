@@ -27,10 +27,10 @@ public class Pin extends Element {
 
     private Block parent = null;
 
+    private boolean linked = false;
+
     private Side side;
     private Flow flow;
-
-    private boolean linked = false;
 
     private double radius = 10;
 
@@ -39,12 +39,6 @@ public class Pin extends Element {
      */
     private double attachX = 0;
     private double attachY = 0;
-
-    /*
-     *
-     */
-    private double realX = 0;
-    private double realY = 0;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //
@@ -64,6 +58,7 @@ public class Pin extends Element {
 
     @Override
     public void draw(GraphicsContext gc) {
+        if (linked) return;
         gc.save();
         gc.translate(x, y);
         gc.fillOval(-radius, -radius, radius * 2, radius * 2);
@@ -77,8 +72,8 @@ public class Pin extends Element {
 
     @Override
     public boolean containsPoint(double x, double y) {
-        double dx = x - this.x;
-        double dy = y - this.y;
+        double dx = Math.abs(x - this.x);
+        double dy = Math.abs(y - this.y);
 
         if (dx > radius || dy > radius) return false;
         if (dx + dy <= radius) return true;
