@@ -13,11 +13,6 @@ public class Element {
     /*
      *
      */
-    protected boolean selected = false;
-
-    /*
-     *
-     */
     protected boolean alive = true;
 
     /*

@@ -29,6 +29,8 @@ public class Pin extends Element {
 
     private boolean linked = false;
 
+    private Link link = null;
+
     private Side side;
     private Flow flow;
 
@@ -53,7 +55,8 @@ public class Pin extends Element {
 
     @Override
     public void tick(double dt) {
-
+        this.x = parent.getX() + attachX;
+        this.y = parent.getY() + attachY;
     }
 
     @Override
@@ -88,8 +91,13 @@ public class Pin extends Element {
     }
 
     public void updatePosition() {
-        this.x = parent.getX() + attachX;
-        this.y = parent.getY() + attachY;
+        // this.x = parent.getX() + attachX;
+        // this.y = parent.getY() + attachY;
+    }
+
+    public void link(Link link) {
+        this.link = link;
+        this.linked = true;
     }
 
     public void setFlow(Flow flow) {

@@ -61,6 +61,8 @@ public class Program {
 
             // remove all dead elements from the list
             if (!e.isAlive()) {
+                // TODO: make sure this doesn't happen while a javafx thread update is happening, it will null pointer
+                // something that is trying to draw to the screen
                 i.remove();
             }
         }
