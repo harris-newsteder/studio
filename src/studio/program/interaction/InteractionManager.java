@@ -1,14 +1,12 @@
 package studio.program.interaction;
 
-import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.ScrollEvent;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import studio.program.Cursor;
 import studio.program.Program;
-import studio.program.element.Block;
 import studio.program.element.Element;
-import studio.program.element.Link;
-import studio.program.element.Pin;
 
 import java.util.EnumMap;
 
@@ -19,16 +17,20 @@ public class InteractionManager {
 
     public enum InteractionType {
         NONE,
-        BLOCK_DRAG,
-        LINKER,
-        LINK_DRAG,
-        SELECTION,
         CAMERA
+    };
+
+    public enum ToolType {
+        GROUP,
+        MOVE,
+        LINK
     };
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private final Logger logger = LoggerFactory.getLogger(InteractionManager.class);
 
     /*
      *
@@ -53,12 +55,22 @@ public class InteractionManager {
     /*
      *
      */
-    private InteractionType type = InteractionType.NONE;
+    private InteractionType currentInteraction = InteractionType.NONE;
 
     /*
      *
      */
     private EnumMap<InteractionType, Interaction> interactions = null;
+
+    /*
+     *
+     */
+    private ToolType currentTool = ToolType.MOVE;
+
+    /*
+     *
+     */
+    private EnumMap<ToolType, Tool> tools = null;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //
@@ -71,63 +83,61 @@ public class InteractionManager {
 
         interactions = new EnumMap<InteractionType, Interaction>(InteractionType.class);
         interactions.put(InteractionType.NONE,       new INone(this, cursor));
-        interactions.put(InteractionType.BLOCK_DRAG, new IBlockDrag(this, cursor));
-        interactions.put(InteractionType.LINKER,     new ILinker(this, cursor));
-        interactions.put(InteractionType.LINK_DRAG,  new ILinkDrag(this, cursor));
-        interactions.put(InteractionType.SELECTION,  new ISelector(this, cursor));
         interactions.put(InteractionType.CAMERA,     new ICamera(this, cursor));
+
+        tools = new EnumMap<ToolType, Tool>(ToolType.class);
+        tools.put(ToolType.GROUP, new TGroup(this));
+        tools.put(ToolType.LINK, new TLink(this));
+        tools.put(ToolType.MOVE, new TMove(this));
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    public void draw(GraphicsContext gc) {
+        tools.get(currentTool).draw(gc);
+    }
+
     public void onMouseMoved(MouseEvent event) {
-        // TODO: move to collider
         Element nh = collider.checkElements();
 
-        if (nh == hover) return;
+        if (nh != hover) {
+            // a change has occured
+            if (nh != null) nh.onEnter();
+            if (hover != null) hover.onExit();
+            hover = nh;
+        }
 
-        // a change has occured
-        if (nh != null) nh.onEnter();
-        if (hover != null) hover.onExit();
-        hover = nh;
+        tools.get(currentTool).onMouseMoved(event);
     }
 
     public void onMousePressed(MouseEvent event) {
         switch (event.getButton()) {
-            case PRIMARY:
-                // the user is pressing the primary button on bare canvas, going to drag it to make a selection of
-                // entities
-                if (hover == null) {
-                    type = InteractionType.SELECTION;
-                } else if (hover.getId() == Block.ID) {
-                    type = InteractionType.BLOCK_DRAG;
-                // the user is clicking on an un-linked pin, going to make a new link between two pins
-                } else if (hover.getId() == Pin.ID) {
-                    type = InteractionType.LINKER;
-                } else if (hover.getId() == Link.ID) {
-                    type = InteractionType.LINK_DRAG;
-                }
-                break;
-            case SECONDARY:
-                break;
             case MIDDLE:
-                type = InteractionType.CAMERA;
+                currentInteraction = InteractionType.CAMERA;
+                break;
+            default:
                 break;
         }
 
-        interactions.get(type).onMousePressed(event);
+        tools.get(currentTool).onMousePressed(event);
+        interactions.get(currentInteraction).onMousePressed(event);
     }
 
     public void onMouseReleased(MouseEvent event) {
-        interactions.get(type).onMouseReleased(event);
+        interactions.get(currentInteraction).onMouseReleased(event);
+        tools.get(currentTool).onMouseReleased(event);
+        currentInteraction = InteractionType.NONE;
+    }
 
-        type = InteractionType.NONE;
+    public void onMouseClicked(MouseEvent event) {
+        tools.get(currentTool).onMouseClicked(event);
     }
 
     public void onMouseDragged(MouseEvent event) {
-        interactions.get(type).onMouseDragged(event);
+        interactions.get(currentInteraction).onMouseDragged(event);
+        tools.get(currentTool).onMouseDragged(event);
     }
 
     public void onScroll(ScrollEvent event) {
@@ -137,6 +147,21 @@ public class InteractionManager {
 
     public void onContextMenuRequested(ContextMenuEvent event) {
 
+    }
+
+    public void onKeyPressed(KeyEvent event) {
+        switch (event.getCode()) {
+            case L:
+                currentTool = ToolType.LINK;
+                logger.info("switching to tool: LINK");
+                break;
+            case M:
+                currentTool = ToolType.MOVE;
+                logger.info("switching to tool: MOVE");
+                break;
+        }
+
+        tools.get(currentTool).onKeyPressed(event);
     }
 
     public Element getHover() {

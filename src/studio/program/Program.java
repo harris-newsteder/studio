@@ -3,6 +3,7 @@ package studio.program;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import studio.App;
@@ -49,12 +50,18 @@ public class Program {
         this.canvas = canvas;
         this.gc = canvas.getGraphicsContext2D();
 
-        canvas.setOnMouseMoved(          event -> {onMouseMoved(event);});
-        canvas.setOnMousePressed(        event -> {onMousePressed(event);});
-        canvas.setOnMouseReleased(       event -> {onMouseReleased(event);});
-        canvas.setOnMouseDragged(        event -> {onMouseDragged(event);});
-        canvas.setOnScroll(              event -> {onScroll(event);});
-        canvas.setOnContextMenuRequested(event -> {onContextMenuRequested(event);});
+        canvas.setFocusTraversable(true);
+
+        canvas.setOnMouseMoved(          event -> {updateCursorPosition(event.getX(), event.getY());
+                                                   interactionManager.onMouseMoved(event);});
+        canvas.setOnMousePressed(        event -> {interactionManager.onMousePressed(event);});
+        canvas.setOnMouseReleased(       event -> {interactionManager.onMouseReleased(event);});
+        canvas.setOnMouseDragged(        event -> {updateCursorPosition(event.getX(), event.getY());
+                                                   interactionManager.onMouseDragged(event);});
+        canvas.setOnScroll(              event -> {interactionManager.onScroll(event);});
+        canvas.setOnContextMenuRequested(event -> {interactionManager.onContextMenuRequested(event);});
+        canvas.setOnKeyPressed(          event -> {interactionManager.onKeyPressed(event);});
+        canvas.setOnMouseClicked(        event -> {interactionManager.onMouseClicked(event);});
     }
 
     public void tick(double dt) {
@@ -95,15 +102,17 @@ public class Program {
                 -camera.getTranslateY()
         );
 
+        drawGrid();
+
         gc.setFill(App.COLOR_WHITE);
         gc.setStroke(App.COLOR_DARK);
         gc.setLineWidth(2.0);
 
+        interactionManager.draw(gc);
+
         for (Element e : elements) {
             e.draw(gc);
         }
-
-        linkCandidate.draw(gc);
 
         gc.restore();
     }
@@ -128,36 +137,33 @@ public class Program {
         return linkCandidate;
     }
 
-    private void onMouseMoved(MouseEvent event) {
-        updateCursorPosition(event.getX(), event.getY());
-        interactionManager.onMouseMoved(event);
-    }
-
-    private void onMousePressed(MouseEvent event) {
-        interactionManager.onMousePressed(event);
-    }
-
-    private void onMouseReleased(MouseEvent event) {
-        interactionManager.onMouseReleased(event);
-    }
-
-    private void onMouseDragged(MouseEvent event) {
-        updateCursorPosition(event.getX(), event.getY());
-        interactionManager.onMouseDragged(event);
-    }
-
-    private void onScroll(ScrollEvent event) {
-        interactionManager.onScroll(event);
-    }
-
-    private void onContextMenuRequested(ContextMenuEvent event) {
-        interactionManager.onContextMenuRequested(event);
-    }
-
     private void updateCursorPosition(double realX, double realY) {
         cursor.setRealX(realX);
         cursor.setRealY(realY);
         cursor.setGraphX(camera.getTranslateX() + (realX / camera.getZoom()));
         cursor.setGraphY(camera.getTranslateY() + (realY / camera.getZoom()));
+    }
+
+    private void drawGrid() {
+        // don't bother drawing a bunch of tiny points if the camera is zoomed out too far
+        if (camera.getZoom() < 0.4) return;
+
+        // start position of the first point
+        double sx = Math.ceil(camera.getTranslateX() / GRID_SIZE) * GRID_SIZE;
+        double sy = Math.ceil(camera.getTranslateY() / GRID_SIZE) * GRID_SIZE;
+
+        // how many points to draw in the x and y directions
+        int nx = (int)Math.ceil((canvas.getWidth() / camera.getZoom()) / GRID_SIZE);
+        int ny = (int)Math.ceil((canvas.getWidth() / camera.getZoom()) / GRID_SIZE);
+
+        // draw all points
+        gc.save();
+        gc.setFill(App.COLOR_DARK);
+        for (int y = 0; y < ny; ++y) {
+            for (int x = 0; x < nx; ++x) {
+                gc.fillRect(sx + (x * GRID_SIZE), sy + (y * GRID_SIZE), 1, 1);
+            }
+        }
+        gc.restore();
     }
 }

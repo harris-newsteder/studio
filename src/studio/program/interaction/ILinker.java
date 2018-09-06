@@ -81,6 +81,8 @@ public class ILinker extends Interaction {
             linkCandidate.setEndPosition(cursor.getGraphX(), cursor.getGraphY());
         }
 
+        linkCandidate.repath();
+
         Element nh = manager.getCollider().checkElements();
 
         // the mouse is still over the element that it was hovering over before the new drag occurred

@@ -4,6 +4,9 @@ import javafx.scene.canvas.GraphicsContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/*
+ * TODO: remove this class entirely and implement all linking logic in the ILinker interaction
+ */
 public class LinkCandidate extends Element {
     public static final String ID = "link_candidate";
 
@@ -47,6 +50,11 @@ public class LinkCandidate extends Element {
                 logger.warn("attemping to link from pin to invalid element (check your code)");
                 return null;
         }
+    }
+
+    public void repath() {
+        double dx = endX - start.getX();
+        double dy = endY - start.getY();
     }
 
     public void setActive(boolean active) {
@@ -108,7 +116,7 @@ public class LinkCandidate extends Element {
     }
 
     private Link linkToLink() {
-        logger.debug("unimplemented");
+        logger.info("unimplemented");
         return null;
     }
 }

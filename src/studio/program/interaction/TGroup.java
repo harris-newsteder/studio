@@ -1,12 +1,18 @@
 package studio.program.interaction;
 
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
-import studio.program.Cursor;
 
-public class ISelector extends Interaction {
-    public ISelector(InteractionManager manager, Cursor cursor) {
-        super(manager, cursor);
+public class TGroup extends Tool {
+    public TGroup(InteractionManager manager) {
+        super(manager);
+    }
+
+    @Override
+    public void draw(GraphicsContext gc) {
+
     }
 
     @Override
@@ -25,12 +31,22 @@ public class ISelector extends Interaction {
     }
 
     @Override
+    public void onKeyPressed(KeyEvent event) {
+
+    }
+
+    @Override
     public void onMouseDragged(MouseEvent event) {
 
     }
 
     @Override
     public void onScroll(ScrollEvent event) {
+
+    }
+
+    @Override
+    public void onMouseClicked(MouseEvent event) {
 
     }
 }

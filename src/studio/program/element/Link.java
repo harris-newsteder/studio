@@ -21,11 +21,17 @@ public class Link extends Element {
      */
     private ArrayList<Pin> sinks = null;
 
+    /*
+     *
+     */
+    private ArrayList<LinkSection> sections = null;
+
     public Link() {
         super();
         id = Link.ID;
 
         sinks = new ArrayList<>();
+        sections = new ArrayList<>();
     }
 
     @Override
@@ -35,7 +41,9 @@ public class Link extends Element {
     @Override
     public void draw(GraphicsContext gc) {
         gc.save();
-        gc.strokeLine(source.getX(), source.getY(), sinks.get(0).getX(), sinks.get(0).getY());
+        for (LinkSection ls : sections) {
+            gc.strokeLine(ls.getStartX(), ls.getStartY(), ls.getEndX(), ls.getEndY());
+        }
         gc.restore();
     }
 
@@ -53,5 +61,9 @@ public class Link extends Element {
             return;
         }
         sinks.add(sink);
+    }
+
+    public void setSectionList(ArrayList<LinkSection> sectionList) {
+        sections = sectionList;
     }
 }

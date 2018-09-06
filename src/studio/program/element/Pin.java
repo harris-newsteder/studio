@@ -21,6 +21,8 @@ public class Pin extends Element {
         LEFT
     }
 
+    public static final double LENGTH = 20;
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -34,7 +36,7 @@ public class Pin extends Element {
     private Side side;
     private Flow flow;
 
-    private double radius = 10;
+    private double radius = 6;
 
     /*
      *
@@ -55,15 +57,50 @@ public class Pin extends Element {
 
     @Override
     public void tick(double dt) {
-        this.x = parent.getX() + attachX;
-        this.y = parent.getY() + attachY;
+        this.x = parent.getX();
+        this.y = parent.getY();
+        switch (side) {
+            case TOP:
+                this.x += attachX;
+                this.y += attachY - LENGTH;
+                break;
+            case RIGHT:
+                this.x += attachX + LENGTH;
+                this.y += attachY;
+                break;
+            case BOTTOM:
+                this.x += attachX;
+                this.y += attachY + LENGTH;
+                break;
+            case LEFT:
+                this.x += attachX - LENGTH;
+                this.y += attachY;
+                break;
+        }
     }
 
     @Override
     public void draw(GraphicsContext gc) {
-        if (linked) return;
         gc.save();
         gc.translate(x, y);
+        switch (side) {
+            case TOP: gc.rotate(0); break;
+            case RIGHT: gc.rotate(90); break;
+            case BOTTOM: gc.rotate(180); break;
+            case LEFT: gc.rotate(270); break;
+        }
+        gc.strokeLine(0, 0, 0, LENGTH);
+
+        if (flow == Flow.INPUT) {
+            gc.strokeLine(0, LENGTH - 1.8, 3, LENGTH - 5);
+            gc.strokeLine(0, LENGTH - 1.8, -3, LENGTH - 5);
+        }
+
+        if (linked) {
+            gc.restore();
+            return;
+        }
+
         gc.fillOval(-radius, -radius, radius * 2, radius * 2);
         gc.strokeOval(-radius, -radius, radius * 2, radius * 2);
         if (hover) {
@@ -119,5 +156,9 @@ public class Pin extends Element {
 
     public boolean isLinked() {
         return linked;
+    }
+
+    public void setLinked(boolean linked) {
+        this.linked = linked;
     }
 }
