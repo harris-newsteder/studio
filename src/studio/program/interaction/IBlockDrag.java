@@ -3,6 +3,7 @@ package studio.program.interaction;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import studio.program.Cursor;
+import studio.program.Program;
 import studio.program.element.Block;
 
 public class IBlockDrag extends Interaction {
@@ -57,8 +58,8 @@ public class IBlockDrag extends Interaction {
     @Override
     public void onMouseDragged(MouseEvent event) {
         drag.setPosition(
-                cursor.getGraphX() - dragOffsetX,
-                cursor.getGraphY() - dragOffsetY
+                Math.round((cursor.getGraphX() - dragOffsetX) / Program.GRID_SIZE) * Program.GRID_SIZE,
+                Math.round((cursor.getGraphY() - dragOffsetY) / Program.GRID_SIZE) * Program.GRID_SIZE
         );
     }
 

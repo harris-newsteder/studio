@@ -5,22 +5,39 @@ import javafx.scene.input.ScrollEvent;
 import studio.program.Cursor;
 import studio.program.element.Element;
 import studio.program.element.Link;
+import studio.program.element.LinkCandidate;
 import studio.program.element.Pin;
 
 /*
  * this class is responsible for managing the interaction of creating new links and adding sink pins to existing links
  * it is not responsible for verifying that a link is valid or of notifying pins that they have been linked, that logic
- * is implemented in the link class itself
+ * is implemented in the LinkCandidate class
  */
 public class ILinker extends Interaction {
 
-    private Pin p1 = null;
-    private Pin p2 = null;
-    private Link candidate = null;
-    private Element over = null;
+    /*
+     *
+     */
+    private Pin start = null;
+
+    /*
+     *
+     */
+    private Element end = null;
+
+    /*
+     *
+     */
+    private LinkCandidate linkCandidate = null;
+
+    /*
+     *
+     */
+    private boolean validEnd = false;
 
     public ILinker(InteractionManager manager, Cursor cursor) {
         super(manager, cursor);
+        linkCandidate = manager.getProgram().getLinkCandidate();
     }
 
     @Override
@@ -30,44 +47,60 @@ public class ILinker extends Interaction {
 
     @Override
     public void onMousePressed(MouseEvent event) {
-        p1 = null;
-        p2 = null;
-        over = null;
+        validEnd = false;
 
-        p1 = (Pin)manager.getHover();
-        p1.onExit();
-        candidate = new Link();
-        candidate.setStartPosition(p1.getX(), p1.getY());
-        candidate.setEndPosition(cursor.getGraphX(), cursor.getGraphY());
+        start = (Pin)manager.getHover();
+        start.onExit();
 
-        manager.getProgram().addElement(candidate);
+        linkCandidate.setActive(true);
+        linkCandidate.setStart(start);
+        linkCandidate.setEndPosition(cursor.getGraphX(), cursor.getGraphY());
+
+        end = null;
     }
 
     @Override
     public void onMouseReleased(MouseEvent event) {
-        //
-        if (!candidate.place(p1, (Pin)over)) {
-            candidate.kill();
+        if (validEnd) {
+            Link newLink = linkCandidate.createLink();
+
+            if (newLink != null) {
+                manager.getProgram().addElement(newLink);
+            }
         }
+
+        linkCandidate.setActive(false);
     }
 
     @Override
     public void onMouseDragged(MouseEvent event) {
-        Element nh = manager.getCollider().checkElements();
-
-        if (over == null) {
-            candidate.setEndPosition(cursor.getGraphX(), cursor.getGraphY());
+        // snap to the end element's position if valid
+        if (validEnd) {
+            linkCandidate.setEndPosition(end.getX(), end.getY());
         } else {
-            candidate.setEndPosition(over.getX(), over.getY());
+            linkCandidate.setEndPosition(cursor.getGraphX(), cursor.getGraphY());
         }
 
-        if (nh == over) return;
-        if (nh == p1) return;
-        // TODO: only over on pins
-        if (over != null) over.onExit();
-        if (nh != null) nh.onEnter();
-        over = nh;
+        Element nh = manager.getCollider().checkElements();
 
+        // the mouse is still over the element that it was hovering over before the new drag occurred
+        if (nh == end) return;
+
+        // no matter if the end is valid or not, there is definitely a new element that the mouse is over and that means
+        // the old element should no longer be "hover" status
+        if (end != null) end.onExit();
+
+        // check to see if the new ending element is valid
+        validEnd = linkCandidate.isValidEnd(nh);
+
+        // apply "hover" status to the new element and hand it over the the linkCandidate
+        if (validEnd) {
+            nh.onEnter();
+            linkCandidate.setEnd(nh);
+        }
+
+        // update the new end element on this side
+        end = nh;
     }
 
     @Override

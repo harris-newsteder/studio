@@ -18,7 +18,7 @@ public class Element {
     /*
      *
      */
-    protected String id = "element";
+    protected String id = "";
 
     /*
      *
@@ -31,7 +31,7 @@ public class Element {
     protected double y = 0;
 
     public Element() {
-
+        id = ID;
     }
 
     public void onEnter() {

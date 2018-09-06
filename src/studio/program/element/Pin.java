@@ -90,6 +90,7 @@ public class Pin extends Element {
         this.attachY = y;
     }
 
+    // TODO: remove???
     public void updatePosition() {
         // this.x = parent.getX() + attachX;
         // this.y = parent.getY() + attachY;
@@ -114,5 +115,9 @@ public class Pin extends Element {
 
     public Side getSide() {
         return side;
+    }
+
+    public boolean isLinked() {
+        return linked;
     }
 }
