@@ -42,6 +42,11 @@ public abstract class Block extends Element {
      */
     protected String text = "";
 
+    /*
+     * a unique name that identifies each block definition
+     */
+    protected String name = "";
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -111,6 +116,9 @@ public abstract class Block extends Element {
         pins.add(pin);
     }
 
+    public String getName() {
+        return name;
+    }
 
     /*
      *

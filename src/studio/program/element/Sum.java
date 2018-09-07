@@ -6,6 +6,7 @@ public class Sum extends Block {
     public Sum() {
         super();
         text = "SUM";
+        name = "sum";
     }
 
     @Override

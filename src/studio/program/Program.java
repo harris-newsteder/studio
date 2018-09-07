@@ -2,7 +2,9 @@ package studio.program;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyCode;
 import studio.App;
+import studio.codegen.Generator;
 import studio.program.element.Element;
 import studio.program.element.Sum;
 import studio.program.interaction.InteractionManager;
@@ -19,6 +21,7 @@ public class Program {
     private InteractionManager interactionManager = null;
     private Canvas canvas = null;
     private GraphicsContext gc = null;
+    private Generator generator = null;
 
     public Program() {
         elements = new ArrayList<>();
@@ -27,6 +30,8 @@ public class Program {
 
         interactionManager = new InteractionManager(this);
 
+
+        generator = new Generator();
 
         // TODO: remove
         Sum s = new Sum();
@@ -52,7 +57,15 @@ public class Program {
                                                    interactionManager.onMouseDragged(event);});
         canvas.setOnScroll(              event -> {interactionManager.onScroll(event);});
         canvas.setOnContextMenuRequested(event -> {interactionManager.onContextMenuRequested(event);});
-        canvas.setOnKeyPressed(          event -> {interactionManager.onKeyPressed(event);});
+        canvas.setOnKeyPressed(          event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                try {
+                    generator.generate(this);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            interactionManager.onKeyPressed(event);});
         canvas.setOnMouseClicked(        event -> {interactionManager.onMouseClicked(event);});
     }
 
