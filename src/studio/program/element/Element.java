@@ -2,7 +2,7 @@ package studio.program.element;
 
 import javafx.scene.canvas.GraphicsContext;
 
-public class Element {
+public abstract class Element {
     public static final String ID = "element";
 
     /*
@@ -42,13 +42,8 @@ public class Element {
         hover = false;
     }
 
-    public void tick(double dt) {
-
-    }
-
-    public void draw(GraphicsContext gc) {
-
-    }
+    public abstract void tick(double dt);
+    public abstract void draw(GraphicsContext gc);
 
     public boolean isAlive() {
         return alive;
@@ -75,7 +70,5 @@ public class Element {
         this.y = y;
     }
 
-    public boolean containsPoint(double x, double y) {
-        return false;
-    }
+    public abstract boolean containsPoint(double x, double y);
 }

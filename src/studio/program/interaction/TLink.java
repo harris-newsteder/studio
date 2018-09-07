@@ -13,16 +13,41 @@ import studio.program.element.Pin;
 import java.util.ArrayList;
 
 public class TLink extends Tool {
-
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
     private final Logger logger = LoggerFactory.getLogger(TLink.class);
     private Pin start = null;
     private ArrayList<LinkSection> sections = null;
-    private LinkSection currentSection = null;
 
+    /*
+     * the horizontal link section that is currently being placed by the user
+     */
+    private LinkSection csHorizontal = null;
+
+    /*
+     * the vertical link section that is currently being placed by the user
+     */
+    private LinkSection csVertical = null;
+
+    /*
+     * this one is a bit hard to explain TODO: explain this
+     */
+    private boolean horizontalBias = true;
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
     public TLink(InteractionManager manager) {
         super(manager);
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
     @Override
     public void draw(GraphicsContext gc) {
         if (!active) return;
@@ -30,7 +55,16 @@ public class TLink extends Tool {
         for (LinkSection ls : sections) {
             gc.strokeLine(ls.getStartX(), ls.getStartY(), ls.getEndX(), ls.getEndY());
         }
-        gc.strokeLine(currentSection.getStartX(), currentSection.getStartY(), currentSection.getEndX(), currentSection.getEndY());
+        gc.strokeLine(csVertical.getStartX(),
+                      csVertical.getStartY(),
+                      csVertical.getEndX(),
+                      csVertical.getEndY()
+        );
+        gc.strokeLine(csHorizontal.getStartX(),
+                      csHorizontal.getStartY(),
+                      csHorizontal.getEndX(),
+                      csHorizontal.getEndY()
+        );
         gc.restore();
     }
 
@@ -41,16 +75,12 @@ public class TLink extends Tool {
         double gridSnapX = Math.round(cursor.getGraphX() / Program.GRID_SIZE) * Program.GRID_SIZE;
         double gridSnapY = Math.round(cursor.getGraphY() / Program.GRID_SIZE) * Program.GRID_SIZE;
 
-        double dx = gridSnapX - currentSection.getStartX();
-        double dy = gridSnapY - currentSection.getStartY();
+        double dx = gridSnapX - csHorizontal.getStartX();
+        double dy = gridSnapY - csHorizontal.getStartY();
 
-        if (Math.abs(dx) < Math.abs(dy)) {
-            currentSection.setOrientation(LinkSection.Orientation.VERTICAL);
-            currentSection.setEndPosition(currentSection.getStartX(), gridSnapY);
-        } else {
-            currentSection.setOrientation(LinkSection.Orientation.HORIZONTAL);
-            currentSection.setEndPosition(gridSnapX, currentSection.getStartY());
-        }
+        csHorizontal.setEndPosition(gridSnapX, csHorizontal.getStartY());
+        csVertical.setEndPosition(csHorizontal.getEndX(), gridSnapY);
+        csVertical.setStartPosition(csHorizontal.getEndX(), csHorizontal.getEndY());
     }
 
     @Override
@@ -91,6 +121,10 @@ public class TLink extends Tool {
         }
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
     private void attemptStart() {
         Element hover = manager.getHover();
 
@@ -98,7 +132,7 @@ public class TLink extends Tool {
 
         //
         if (hover.getId() != Pin.ID) {
-            logger.info("attemping to link an element that is not a pin");
+            logger.info("new links must start at a pin");
             return;
         }
 
@@ -113,20 +147,32 @@ public class TLink extends Tool {
         start = (Pin)manager.getHover();
         start.setLinked(true);
 
-        currentSection = new LinkSection();
-        currentSection.setStartPosition(start.getX(), start.getY());
-        currentSection.setEndPosition(start.getX(), start.getY());
+        //
+        csHorizontal = new LinkSection();
+        csHorizontal.setStartPosition(start.getX(), start.getY());
+        csHorizontal.setEndPosition(start.getX(), start.getY());
+        csHorizontal.setOrientation(LinkSection.Orientation.HORIZONTAL);
+
+        //
+        csVertical = new LinkSection();
+        csVertical.setStartPosition(start.getX(), start.getY());
+        csVertical.setEndPosition(start.getX(), start.getY());
+        csVertical.setOrientation(LinkSection.Orientation.VERTICAL);
 
         sections = new ArrayList<>();
     }
 
     private void attemptNextSection() {
-        sections.add(currentSection);
+        if (csVertical.getLength() > 0)
+            sections.add(csVertical);
+
+        if (csHorizontal.getLength() > 0)
+            sections.add(csHorizontal);
 
         Element end = manager.getHover();
 
-        double ex = currentSection.getEndX();
-        double ey = currentSection.getEndY();
+        double ex = csVertical.getEndX();
+        double ey = csVertical.getEndY();
         double gridSnapX = Math.round(cursor.getGraphX() / Program.GRID_SIZE) * Program.GRID_SIZE;
         double gridSnapY = Math.round(cursor.getGraphY() / Program.GRID_SIZE) * Program.GRID_SIZE;
 
@@ -134,10 +180,17 @@ public class TLink extends Tool {
             attempLink(end);
             active = false;
         } else {
-            currentSection = new LinkSection();
+            //
+            csHorizontal = new LinkSection();
+            csHorizontal.setStartPosition(ex, ey);
+            csHorizontal.setEndPosition(ex, ey);
+            csHorizontal.setOrientation(LinkSection.Orientation.HORIZONTAL);
 
-            currentSection.setStartPosition(ex, ey);
-            currentSection.setEndPosition(ex, ey);
+            //
+            csVertical = new LinkSection();
+            csVertical.setStartPosition(ex, ey);
+            csVertical.setEndPosition(ex, ey);
+            csVertical.setOrientation(LinkSection.Orientation.VERTICAL);
         }
     }
 
@@ -163,7 +216,12 @@ public class TLink extends Tool {
 
         // TODO: data type checking
 
+        for (LinkSection ls : sections) {
+            ls.reorder();
+        }
+
         Link link = new Link();
+
         link.setSectionList(sections);
 
         if (start.getFlow() == Pin.Flow.OUTPUT) {

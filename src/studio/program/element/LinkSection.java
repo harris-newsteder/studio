@@ -30,6 +30,27 @@ public class LinkSection {
         ey = y;
     }
 
+    /*
+     * reorder the start and end points so that the start position is always less than the end position;
+     * horizontal link sections will now always run from left to right
+     * vertical link sections will now always run from top to bottom
+     */
+    public void reorder() {
+        if (orientation == Orientation.HORIZONTAL) {
+            if (ex < sx) {
+                double swap = ex;
+                ex = sx;
+                sx = swap;
+            }
+        } else {
+            if (ey < sy) {
+                double swap = ey;
+                ey = sy;
+                sy = swap;
+            }
+        }
+    }
+
     public double getStartX() {
         return sx;
     }
@@ -48,5 +69,13 @@ public class LinkSection {
 
     public Orientation getOrientation() {
         return orientation;
+    }
+
+    public double getLength() {
+        if (orientation == Orientation.HORIZONTAL) {
+            return Math.abs(ex - sx);
+        } else {
+            return Math.abs(ey - sy);
+        }
     }
 }

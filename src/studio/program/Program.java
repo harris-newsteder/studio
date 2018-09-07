@@ -2,14 +2,8 @@ package studio.program;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.ScrollEvent;
 import studio.App;
 import studio.program.element.Element;
-import studio.program.element.LinkCandidate;
-import studio.program.element.Pin;
 import studio.program.element.Sum;
 import studio.program.interaction.InteractionManager;
 
@@ -25,13 +19,11 @@ public class Program {
     private InteractionManager interactionManager = null;
     private Canvas canvas = null;
     private GraphicsContext gc = null;
-    private LinkCandidate linkCandidate = null;
 
     public Program() {
         elements = new ArrayList<>();
         camera = new Camera();
         cursor = new Cursor();
-        linkCandidate = new LinkCandidate();
 
         interactionManager = new InteractionManager(this);
 
@@ -65,8 +57,6 @@ public class Program {
     }
 
     public void tick(double dt) {
-        linkCandidate.tick(dt);
-
         Iterator i = elements.iterator();
 
         while (i.hasNext()) {
@@ -131,10 +121,6 @@ public class Program {
 
     public ArrayList<Element> getElements() {
         return elements;
-    }
-
-    public LinkCandidate getLinkCandidate() {
-        return linkCandidate;
     }
 
     private void updateCursorPosition(double realX, double realY) {

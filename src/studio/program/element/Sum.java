@@ -9,6 +9,11 @@ public class Sum extends Block {
     }
 
     @Override
+    public void tick(double dt) {
+
+    }
+
+    @Override
     public void createPins(Program program) {
         Pin in1 = new Pin(this);
         in1.setFlow(Pin.Flow.INPUT);
