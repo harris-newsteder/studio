@@ -5,6 +5,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import studio.App;
 import studio.codegen.Generator;
+import studio.program.element.And;
 import studio.program.element.Element;
 import studio.program.element.Sum;
 import studio.program.interaction.InteractionManager;
@@ -41,6 +42,10 @@ public class Program {
         s = new Sum();
         addElement(s);
         s.createPins(this);
+
+        And a = new And();
+        addElement(a);
+        a.createPins(this);
     }
 
     public void setCanvas(Canvas canvas) {

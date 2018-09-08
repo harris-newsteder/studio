@@ -116,6 +116,10 @@ public abstract class Block extends Element {
         pins.add(pin);
     }
 
+    public ArrayList<Pin> getPins() {
+        return pins;
+    }
+
     public String getName() {
         return name;
     }

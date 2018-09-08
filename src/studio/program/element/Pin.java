@@ -21,6 +21,12 @@ public class Pin extends Element {
         LEFT
     }
 
+    public enum SignalType {
+        DISCRETE,
+        ANALOG,
+        NUMBER
+    }
+
     public static final double LENGTH = 20;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -34,9 +40,13 @@ public class Pin extends Element {
     private Link link = null;
 
     private Side side;
-    private Flow flow;
 
     private double radius = 6;
+
+    private double value = 0;
+
+    private final SignalType type;
+    private final Flow flow;
 
     /*
      *
@@ -48,10 +58,12 @@ public class Pin extends Element {
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public Pin(Block parent) {
+    public Pin(Block parent, SignalType type, Flow flow) {
         super();
         id = ID;
         this.parent = parent;
+        this.type = type;
+        this.flow = flow;
     }
 
 
@@ -138,10 +150,6 @@ public class Pin extends Element {
         this.linked = true;
     }
 
-    public void setFlow(Flow flow) {
-        this.flow = flow;
-    }
-
     public Flow getFlow() {
         return flow;
     }
@@ -160,5 +168,9 @@ public class Pin extends Element {
 
     public void setLinked(boolean linked) {
         this.linked = linked;
+    }
+
+    public SignalType getType() {
+        return type;
     }
 }
