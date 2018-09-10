@@ -3,6 +3,7 @@ package studio.codegen;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import studio.program.Program;
+import studio.program.Signal;
 import studio.program.element.Block;
 import studio.program.element.Element;
 import studio.program.element.Link;
@@ -17,12 +18,13 @@ public class Generator {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private final String TAB = "    ";
-    private final Logger logger = LoggerFactory.getLogger(Generator.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(Generator.class);
+
     private String outputFilePath = "C:\\Users\\\\Desktop\\out.c";
     private PrintWriter writer = null;
 
     /*
-     * a collection with one entry for every type of block in the program
+     * a dictionary with one entry for every type of block in the program
      */
     private HashMap<String, Block> blockDictionary = null;
 
@@ -39,16 +41,17 @@ public class Generator {
     /*
      *
      */
-    private EnumMap<Pin.SignalType, String> typeStringMap = null;
+    private EnumMap<Signal.Type, String> typeStringMap = null;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Generator() {
-        typeStringMap = new EnumMap<Pin.SignalType, String>(Pin.SignalType.class);
-        typeStringMap.put(Pin.SignalType.DISCRETE, "uint8_t");
-        typeStringMap.put(Pin.SignalType.NUMBER, "float");
+        typeStringMap = new EnumMap<Signal.Type, String>(Signal.Type.class);
+        typeStringMap.put(Signal.Type.DISCRETE, "u8");
+        typeStringMap.put(Signal.Type.ANALOG, "f32");
+        typeStringMap.put(Signal.Type.NUMBER, "f32");
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -81,33 +84,15 @@ public class Generator {
 
         for (Element e : program.getElements()) {
             switch (e.getId()) {
-                case Block.ID:
-
-                    Block b = (Block)e;
-                    String name = b.getName();
-
-                    if (blocks.contains(b)) {
-                        logger.info("found duplicate block in program: " + b);
-                        continue;
-                    }
-
-                    blocks.add(b);
-
-                    if (!blockDictionary.containsKey(name))
-                        blockDictionary.put(name, b);
-
-                    break;
                 case Link.ID:
-
-                    Link l = (Link)e;
-
-                    if (links.contains(l)) {
-                        logger.info("found duplicate link in program: " + l);
-                        continue;
+                    break;
+                case Pin.ID:
+                    break;
+                case Block.ID:
+                    Block block = (Block)e;
+                    if (!blockDictionary.containsValue(block)) {
+                        blockDictionary.put(block.getName(), block);
                     }
-
-                    links.add(l);
-
                     break;
                 default:
                     break;
@@ -121,63 +106,37 @@ public class Generator {
 
     private void generateTypes() {
         // generate block structures
-        for (Block b : blockDictionary.values()) {
-            puts("typedef struct {");
+        for (Block block : blockDictionary.values()) {
+            puts("typedef struct");
+            puts("{");
 
-            int i = 0;
-
-            for (Pin p : b.getPins()) {
-                statement(TAB + typeStringMap.get(p.getType()) + " *p" + i++);
+            for (Pin pin : block.getPins()) {
+                statement(TAB + typeStringMap.get(pin.getSignal().getType()) + " *p" + pin.getNumber());
             }
 
-            puts("} b_" + b.getName() + "_t;");
+            statement("} b_"  + block.getName() + "_t");
             nl();
         }
     }
 
     private void generateFunctions() {
         // need to generate a function for each type of block in the program
-        for (Block b : blockDictionary.values()) {
+        for (Block block : blockDictionary.values()) {
+            String bn = block.getName();
 
+            puts("void b_" + bn + "_fn(b_" + bn + "_t *b)");
+            puts("{");
+            puts("}");
+            nl();
         }
     }
 
     private void generateVariables() {
-        // need to generate a variable for every link in the program
-        int i = 0;
-
-        for (Link link : links) {
-            switch (link.getSource().getType()) {
-                case ANALOG:
-                    break;
-                case NUMBER:
-                    break;
-                case DISCRETE:
-                    statement("uint8_t l" + i);
-                    break;
-            }
-
-            i++;
-        }
-        nl();
-
-
-
-        // need to generate a variable for every block in the program
-        i = 0;
-
-        for (Block block : blocks) {
-            puts("b_" + block.getName() + "_t b" + i + ";");
-            i++;
-        }
-        nl();
     }
 
     private void generateSetup() {
         puts("void setup()");
         puts("{");
-
-        //
 
         puts("}");
         nl();
@@ -186,7 +145,6 @@ public class Generator {
     private void generateLoop() {
         puts("void loop()");
         puts("{");
-
 
         puts("}");
     }

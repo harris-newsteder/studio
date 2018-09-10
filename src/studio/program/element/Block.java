@@ -107,9 +107,7 @@ public abstract class Block extends Element {
 
         // when the block is moved all the pins "attached" to it need to update their own positions relative to their
         // parent (i.e. this block)
-        for (Pin pin : pins) {
-            pin.updatePosition();
-        }
+        // TODO:
     }
 
     public void addPin(Pin pin) {

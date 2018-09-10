@@ -12,7 +12,7 @@ public class Link extends Element {
 
     public static final double INTERACTION_DISTANCE = 2;
 
-    private final Logger logger = LoggerFactory.getLogger(Link.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(Link.class);
 
     /*
      *
@@ -75,9 +75,13 @@ public class Link extends Element {
         return source;
     }
 
+    public ArrayList<Pin> getSinks() {
+        return sinks;
+    }
+
     public void addSink(Pin sink) {
         if (sinks.contains(sink)) {
-            logger.warn("attempting to add sink pin to link that is already added");
+            LOGGER.warn("attempting to add sink pin to link that is already added");
             return;
         }
         sinks.add(sink);

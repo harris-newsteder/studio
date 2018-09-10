@@ -2,6 +2,7 @@ package studio.program.element;
 
 import javafx.scene.canvas.GraphicsContext;
 import studio.App;
+import studio.program.Signal;
 
 public class Pin extends Element {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -21,32 +22,42 @@ public class Pin extends Element {
         LEFT
     }
 
-    public enum SignalType {
-        DISCRETE,
-        ANALOG,
-        NUMBER
-    }
-
     public static final double LENGTH = 20;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /*
+     *
+     */
     private Block parent = null;
 
+    /*
+     *
+     */
     private boolean linked = false;
 
+    /*
+     *
+     */
     private Link link = null;
 
+    /*
+     *
+     */
     private Side side;
 
-    private double radius = 6;
-
-    private double value = 0;
-
-    private final SignalType type;
+    /*
+     *
+     */
     private final Flow flow;
+
+
+    /*
+     *
+     */
+    private Signal signal = null;
 
     /*
      *
@@ -54,16 +65,27 @@ public class Pin extends Element {
     private double attachX = 0;
     private double attachY = 0;
 
+    /*
+     *
+     */
+    private double radius = 6;
+
+    /*
+     *
+     */
+    private int number = -1;
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public Pin(Block parent, SignalType type, Flow flow) {
+    public Pin(Block parent, Signal.Type type, Flow flow) {
         super();
         id = ID;
         this.parent = parent;
-        this.type = type;
         this.flow = flow;
+        signal = new Signal();
+        signal.setType(type);
     }
 
 
@@ -139,10 +161,8 @@ public class Pin extends Element {
         this.attachY = y;
     }
 
-    // TODO: remove???
-    public void updatePosition() {
-        // this.x = parent.getX() + attachX;
-        // this.y = parent.getY() + attachY;
+    public Block getParent() {
+        return parent;
     }
 
     public void link(Link link) {
@@ -170,7 +190,15 @@ public class Pin extends Element {
         this.linked = linked;
     }
 
-    public SignalType getType() {
-        return type;
+    public Signal getSignal() {
+        return signal;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
+    public int getNumber() {
+        return number;
     }
 }
