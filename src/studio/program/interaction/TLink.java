@@ -131,7 +131,7 @@ public class TLink extends Tool {
         if (hover == null) return;
 
         //
-        if (hover.getId() != Pin.ID) {
+        if (hover.getID() != Pin.ID) {
             logger.info("new links must start at a pin");
             return;
         }
@@ -198,7 +198,7 @@ public class TLink extends Tool {
         start.setLinked(false);
 
         // TODO: add link to link
-        if (!(end.getId() == Pin.ID)) {
+        if (!(end.getID() == Pin.ID)) {
             return;
         }
 

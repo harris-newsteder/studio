@@ -1,6 +1,7 @@
 package studio.program.element;
 
 import javafx.scene.canvas.GraphicsContext;
+import studio.util.UID;
 
 public abstract class Element {
     public static final String ID = "element";
@@ -30,8 +31,14 @@ public abstract class Element {
      */
     protected double y = 0;
 
+    /*
+     *
+     */
+    private final int uid;
+
     public Element() {
         id = ID;
+        uid = UID.generate();
     }
 
     public void onEnter() {
@@ -53,7 +60,7 @@ public abstract class Element {
         alive = false;
     }
 
-    public String getId() {
+    public String getID() {
         return id;
     }
 
@@ -71,4 +78,8 @@ public abstract class Element {
     }
 
     public abstract boolean containsPoint(double x, double y);
+
+    public int getUID() {
+        return uid;
+    }
 }

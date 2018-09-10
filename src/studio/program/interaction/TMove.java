@@ -60,7 +60,7 @@ public class TMove extends Tool {
         active = false;
         if (event.getButton() != MouseButton.PRIMARY) return;
         if (manager.getHover() == null) return;
-        if (manager.getHover().getId() != Block.ID) return;
+        if (manager.getHover().getID() != Block.ID) return;
         active = true;
 
         drag = (Block)manager.getHover();

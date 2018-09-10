@@ -20,7 +20,7 @@ public class Generator {
     private final String TAB = "    ";
     private final Logger LOGGER = LoggerFactory.getLogger(Generator.class);
 
-    private String outputFilePath = "C:\\Users\\\\Desktop\\out.c";
+    private String outputFilePath = "C:\\Users\\family\\Desktop\\out.c";
     private PrintWriter writer = null;
 
     /*
@@ -83,13 +83,19 @@ public class Generator {
         links = new ArrayList<>();
 
         for (Element e : program.getElements()) {
-            switch (e.getId()) {
+            switch (e.getID()) {
                 case Link.ID:
                     break;
                 case Pin.ID:
                     break;
                 case Block.ID:
                     Block block = (Block)e;
+                    if (!blocks.contains(block)) {
+                        blocks.add(block);
+                    } else {
+                        LOGGER.error("duplicate block in element list!");
+                    }
+
                     if (!blockDictionary.containsValue(block)) {
                         blockDictionary.put(block.getName(), block);
                     }
@@ -106,23 +112,23 @@ public class Generator {
 
     private void generateTypes() {
         // generate block structures
-        for (Block block : blockDictionary.values()) {
+        for (Block b : blockDictionary.values()) {
             puts("typedef struct");
             puts("{");
 
-            for (Pin pin : block.getPins()) {
-                statement(TAB + typeStringMap.get(pin.getSignal().getType()) + " *p" + pin.getNumber());
+            for (Pin p : b.getPins()) {
+                statement(TAB + typeStringMap.get(p.getSignal().getType()) + " *p" + p.getIndex());
             }
 
-            statement("} b_"  + block.getName() + "_t");
+            statement("} b_"  + b.getName() + "_t");
             nl();
         }
     }
 
     private void generateFunctions() {
         // need to generate a function for each type of block in the program
-        for (Block block : blockDictionary.values()) {
-            String bn = block.getName();
+        for (Block b : blockDictionary.values()) {
+            String bn = b.getName();
 
             puts("void b_" + bn + "_fn(b_" + bn + "_t *b)");
             puts("{");
@@ -132,11 +138,20 @@ public class Generator {
     }
 
     private void generateVariables() {
+        for (Block b : blocks) {
+            statement("b_" + b.getName() + "_t b" + b.getUID());
+        }
+
+        nl();
     }
 
     private void generateSetup() {
         puts("void setup()");
         puts("{");
+
+        for (Block b : blocks) {
+
+        }
 
         puts("}");
         nl();

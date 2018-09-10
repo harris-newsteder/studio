@@ -73,7 +73,7 @@ public class Pin extends Element {
     /*
      *
      */
-    private int number = -1;
+    private int index = -1;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //
@@ -194,11 +194,11 @@ public class Pin extends Element {
         return signal;
     }
 
-    public void setNumber(int number) {
-        this.number = number;
+    public void setIndex(int index) {
+        this.index = index;
     }
 
-    public int getNumber() {
-        return number;
+    public int getIndex() {
+        return index;
     }
 }
