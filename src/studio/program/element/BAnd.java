@@ -3,8 +3,8 @@ package studio.program.element;
 import studio.program.Program;
 import studio.program.Signal;
 
-public class And extends Block {
-    public And() {
+public class BAnd extends Block {
+    public BAnd() {
         super();
         text = "AND";
         name = "and";

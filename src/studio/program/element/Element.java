@@ -4,7 +4,7 @@ import javafx.scene.canvas.GraphicsContext;
 import studio.util.UID;
 
 public abstract class Element {
-    public static final String ID = "element";
+    public static final String EID = "element";
 
     /*
      *
@@ -19,7 +19,7 @@ public abstract class Element {
     /*
      *
      */
-    protected String id = "";
+    protected String eid = "";
 
     /*
      *
@@ -37,7 +37,7 @@ public abstract class Element {
     private final int uid;
 
     public Element() {
-        id = ID;
+        eid = EID;
         uid = UID.generate();
     }
 
@@ -60,8 +60,8 @@ public abstract class Element {
         alive = false;
     }
 
-    public String getID() {
-        return id;
+    public String getEID() {
+        return eid;
     }
 
     public double getX() {

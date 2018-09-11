@@ -3,8 +3,8 @@ package studio.program.element;
 import studio.program.Program;
 import studio.program.Signal;
 
-public class Sum extends Block {
-    public Sum() {
+public class BSum extends Block {
+    public BSum() {
         super();
         text = "SUM";
         name = "sum";

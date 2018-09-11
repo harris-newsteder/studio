@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 
 public class Link extends Element {
-    public static final String ID = "link";
+    public static final String EID = "link";
 
     public static final double INTERACTION_DISTANCE = 2;
 
@@ -31,7 +31,7 @@ public class Link extends Element {
 
     public Link() {
         super();
-        id = Link.ID;
+        eid = Link.EID;
 
         sinks = new ArrayList<>();
         sections = new ArrayList<>();

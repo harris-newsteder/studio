@@ -1,0 +1,7 @@
+#def
+
+#init
+
+#fn
+
+$PIN(1) = !$PIN(0);

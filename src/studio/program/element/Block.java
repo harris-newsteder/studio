@@ -16,7 +16,7 @@ public abstract class Block extends Element {
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static final String ID = "block";
+    public static final String EID = "block";
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //
@@ -53,7 +53,7 @@ public abstract class Block extends Element {
 
     public Block() {
         super();
-        id = ID;
+        eid = EID;
         pins = new ArrayList<>();
     }
 

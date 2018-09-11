@@ -8,7 +8,7 @@ public class Pin extends Element {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public static final String ID = "pin";
+    public static final String EID = "pin";
 
     public enum Flow {
         INPUT,
@@ -81,7 +81,7 @@ public class Pin extends Element {
 
     public Pin(Block parent, Signal.Type type, Flow flow) {
         super();
-        id = ID;
+        eid = EID;
         this.parent = parent;
         this.flow = flow;
         signal = new Signal();

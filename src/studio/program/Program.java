@@ -5,9 +5,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import studio.App;
 import studio.codegen.Generator;
-import studio.program.element.And;
-import studio.program.element.Element;
-import studio.program.element.Sum;
+import studio.program.element.*;
 import studio.program.interaction.InteractionManager;
 
 import java.util.ArrayList;
@@ -35,17 +33,17 @@ public class Program {
         generator = new Generator();
 
         // TODO: remove
-        Sum s = new Sum();
-        addElement(s);
-        s.createPins(this);
+        Block b = new BDiscreteOutput();
+        addElement(b);
+        b.createPins(this);
 
-        s = new Sum();
-        addElement(s);
-        s.createPins(this);
+        b = new BDiscreteInput();
+        addElement(b);
+        b.createPins(this);
 
-        And a = new And();
-        addElement(a);
-        a.createPins(this);
+        b = new BNot();
+        addElement(b);
+        b.createPins(this);
     }
 
     public void setCanvas(Canvas canvas) {

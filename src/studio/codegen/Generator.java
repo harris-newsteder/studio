@@ -20,13 +20,18 @@ public class Generator {
     private final String TAB = "    ";
     private final Logger LOGGER = LoggerFactory.getLogger(Generator.class);
 
-    private String outputFilePath = "C:\\Users\\family\\Desktop\\out.c";
+    private String outputFilePath = "C:\\Users\\Harris\\Desktop\\gen\\gen.ino";
     private PrintWriter writer = null;
 
     /*
      * a dictionary with one entry for every type of block in the program
      */
     private HashMap<String, Block> blockDictionary = null;
+
+    /*
+     *
+     */
+    private HashMap<String, GenFile> genFileDictionary = null;
 
     /*
      * a list of all blocks in the program
@@ -63,6 +68,7 @@ public class Generator {
 
         organizeElements(program);
 
+        generateIncludes();
         generateConstants();
         generateTypes();
         generateFunctions();
@@ -77,14 +83,15 @@ public class Generator {
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private void organizeElements(Program program) {
+    private void organizeElements(Program program) throws Exception {
         blockDictionary = new HashMap<>();
+        genFileDictionary = new HashMap<>();
         blocks = new ArrayList<>();
         links = new ArrayList<>();
 
         for (Element e : program.getElements()) {
-            switch (e.getID()) {
-                case Link.ID:
+            switch (e.getEID()) {
+                case Link.EID:
                     Link l = (Link)e;
 
                     if (!links.contains(l)) {
@@ -94,9 +101,9 @@ public class Generator {
                     }
 
                     break;
-                case Pin.ID:
+                case Pin.EID:
                     break;
-                case Block.ID:
+                case Block.EID:
                     Block b = (Block)e;
 
                     if (!blocks.contains(b)) {
@@ -107,6 +114,7 @@ public class Generator {
 
                     if (!blockDictionary.containsValue(b)) {
                         blockDictionary.put(b.getName(), b);
+                        genFileDictionary.put(b.getName(), new GenFile(b.getName()));
                     }
                     break;
                 default:
@@ -115,18 +123,44 @@ public class Generator {
         }
     }
 
+    private void generateIncludes() {
+        statement("#include <stdint.h>");
+        nl();
+    }
+
     private void generateConstants() {
         //
     }
 
     private void generateTypes() {
+
+        statement("typedef uint8_t   u8");
+        // for some reason the arduino libraries already have u16 defined...
+        // statement("typedef uint16_t u16");
+        statement("typedef uint32_t u32");
+        statement("typedef int8_t    i8");
+        statement("typedef int16_t  i16");
+        statement("typedef int32_t  i32");
+        statement("typedef float    f32");
+        statement("typedef double   f64");
+
+        nl();
+
         // generate block structures
         for (Block b : blockDictionary.values()) {
             puts("typedef struct");
             puts("{");
 
+            puts(TAB + "// pins");
+
             for (Pin p : b.getPins()) {
                 statement(TAB + typeStringMap.get(p.getSignal().getType()) + " *p" + p.getIndex());
+            }
+
+            puts(TAB + "// variables");
+
+            for (String line : genFileDictionary.get(b.getName()).getDefLines()) {
+                puts(TAB + line);
             }
 
             statement("} b_"  + b.getName() + "_t");
@@ -142,12 +176,9 @@ public class Generator {
             puts("void b_" + bn + "_fn(b_" + bn + "_t *b)");
             puts("{");
 
-            File genFile = new File("src/gen/" + b.getName() + ".gen");
-            BufferedReader br = new BufferedReader(new FileReader(genFile));
-            String line = "";
-
-            while ((line = br.readLine()) != null) {
-                line = line.replace("$(", "*(b->");
+            for (String line : genFileDictionary.get(b.getName()).getFnLines()) {
+                line = line.replace("$VAR(", "(b->");
+                line = line.replace("$PIN(", "*(b->p");
                 puts(TAB + line);
             }
 
@@ -176,9 +207,15 @@ public class Generator {
         puts("{");
 
         for (Block b : blocks) {
+            //
             for (Pin p : b.getPins()) {
                 if (!p.isLinked()) continue;
                 statement(TAB + "b" + b.getUID() + ".p" + p.getIndex() + " = &l" + p.getLink().getUID());
+            }
+            //
+            for (String line : genFileDictionary.get(b.getName()).getInitLines()) {
+                line = line.replace("$VAR(", "(b" + b.getUID() + ".");
+                puts(TAB + line);
             }
             nl();
         }
