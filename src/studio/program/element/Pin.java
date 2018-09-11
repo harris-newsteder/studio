@@ -170,6 +170,10 @@ public class Pin extends Element {
         this.linked = true;
     }
 
+    public Link getLink() {
+        return link;
+    }
+
     public Flow getFlow() {
         return flow;
     }

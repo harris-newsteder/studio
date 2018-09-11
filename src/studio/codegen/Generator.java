@@ -9,7 +9,7 @@ import studio.program.element.Element;
 import studio.program.element.Link;
 import studio.program.element.Pin;
 
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.*;
 
 public class Generator {
@@ -85,19 +85,28 @@ public class Generator {
         for (Element e : program.getElements()) {
             switch (e.getID()) {
                 case Link.ID:
+                    Link l = (Link)e;
+
+                    if (!links.contains(l)) {
+                        links.add(l);
+                    } else {
+                        LOGGER.error("duplicate link in element list!");
+                    }
+
                     break;
                 case Pin.ID:
                     break;
                 case Block.ID:
-                    Block block = (Block)e;
-                    if (!blocks.contains(block)) {
-                        blocks.add(block);
+                    Block b = (Block)e;
+
+                    if (!blocks.contains(b)) {
+                        blocks.add(b);
                     } else {
                         LOGGER.error("duplicate block in element list!");
                     }
 
-                    if (!blockDictionary.containsValue(block)) {
-                        blockDictionary.put(block.getName(), block);
+                    if (!blockDictionary.containsValue(b)) {
+                        blockDictionary.put(b.getName(), b);
                     }
                     break;
                 default:
@@ -125,19 +134,36 @@ public class Generator {
         }
     }
 
-    private void generateFunctions() {
+    private void generateFunctions() throws Exception {
         // need to generate a function for each type of block in the program
         for (Block b : blockDictionary.values()) {
             String bn = b.getName();
 
             puts("void b_" + bn + "_fn(b_" + bn + "_t *b)");
             puts("{");
+
+            File genFile = new File("src/gen/" + b.getName() + ".gen");
+            BufferedReader br = new BufferedReader(new FileReader(genFile));
+            String line = "";
+
+            while ((line = br.readLine()) != null) {
+                line = line.replace("$(", "*(b->");
+                puts(TAB + line);
+            }
+
             puts("}");
+
             nl();
         }
     }
 
     private void generateVariables() {
+        for (Link l : links) {
+            statement(typeStringMap.get(l.getSource().getSignal().getType()) + " l" + l.getUID());
+        }
+
+        nl();
+
         for (Block b : blocks) {
             statement("b_" + b.getName() + "_t b" + b.getUID());
         }
@@ -150,7 +176,11 @@ public class Generator {
         puts("{");
 
         for (Block b : blocks) {
-
+            for (Pin p : b.getPins()) {
+                if (!p.isLinked()) continue;
+                statement(TAB + "b" + b.getUID() + ".p" + p.getIndex() + " = &l" + p.getLink().getUID());
+            }
+            nl();
         }
 
         puts("}");
@@ -160,7 +190,9 @@ public class Generator {
     private void generateLoop() {
         puts("void loop()");
         puts("{");
-
+        for (Block b : blocks) {
+            statement(TAB + "b_" + b.getName() + "_fn(&b" + b.getUID() + ")");
+        }
         puts("}");
     }
 
