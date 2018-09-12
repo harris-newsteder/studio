@@ -1,10 +1,5 @@
-#def
-
-u8 input_pin;
-
 #init
 
-$VAR(input_pin) = 6;
 pinMode($VAR(input_pin), INPUT);
 
 #fn

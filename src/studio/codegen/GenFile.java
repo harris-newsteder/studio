@@ -6,14 +6,12 @@ import java.io.FileReader;
 import java.util.ArrayList;
 
 public class GenFile {
-    private ArrayList<String> def = null;
     private ArrayList<String> init = null;
     private ArrayList<String> fn = null;
 
     private ArrayList<String> listPtr = null;
 
     public GenFile(String blockName) throws Exception {
-        def = new ArrayList<>();
         init = new ArrayList<>();
         fn = new ArrayList<>();
 
@@ -30,9 +28,6 @@ public class GenFile {
                 String region = line.substring(1);
 
                 switch (region) {
-                    case "def":
-                        listPtr = def;
-                        break;
                     case "init":
                         listPtr = init;
                         break;
@@ -47,10 +42,6 @@ public class GenFile {
                 listPtr.add(line);
             }
         }
-    }
-
-    public ArrayList<String> getDefLines() {
-        return def;
     }
 
     public ArrayList<String> getInitLines() {

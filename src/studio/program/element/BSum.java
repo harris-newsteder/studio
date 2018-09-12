@@ -1,7 +1,7 @@
 package studio.program.element;
 
 import studio.program.Program;
-import studio.program.Signal;
+import studio.program.Var;
 
 public class BSum extends Block {
     public BSum() {
@@ -17,17 +17,17 @@ public class BSum extends Block {
 
     @Override
     public void createPins(Program program) {
-        Pin in1 = new Pin(this, Signal.Type.NUMBER, Pin.Flow.INPUT);
+        Pin in1 = new Pin(this, Var.Type.F64, Pin.Flow.INPUT);
         in1.setSide(Pin.Side.LEFT);
         in1.setAttachmentPoint(-width / 2, -20);
         in1.setIndex(0);
 
-        Pin in2 = new Pin(this, Signal.Type.NUMBER, Pin.Flow.INPUT);
+        Pin in2 = new Pin(this, Var.Type.F64, Pin.Flow.INPUT);
         in2.setSide(Pin.Side.LEFT);
         in2.setAttachmentPoint(-width / 2, 20);
         in2.setIndex(1);
 
-        Pin out1 = new Pin(this, Signal.Type.NUMBER, Pin.Flow.OUTPUT);
+        Pin out1 = new Pin(this, Var.Type.F64, Pin.Flow.OUTPUT);
         out1.setSide(Pin.Side.RIGHT);
         out1.setAttachmentPoint(width / 2, 0);
         out1.setIndex(2);

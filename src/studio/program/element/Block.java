@@ -5,8 +5,10 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.text.TextAlignment;
 import studio.App;
 import studio.program.Program;
+import studio.program.Var;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /*
  * a block is a rectangular element that has pins
@@ -30,6 +32,11 @@ public abstract class Block extends Element {
     /*
      *
      */
+    protected HashMap<String, Var> vars = null;
+
+    /*
+     *
+     */
     protected double width = 80;
 
     /*
@@ -43,7 +50,7 @@ public abstract class Block extends Element {
     protected String text = "";
 
     /*
-     * a unique name that identifies each block definition
+     * a unique name that identifies what type of block this is
      */
     protected String name = "";
 
@@ -55,6 +62,7 @@ public abstract class Block extends Element {
         super();
         eid = EID;
         pins = new ArrayList<>();
+        vars = new HashMap<>();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -110,20 +118,28 @@ public abstract class Block extends Element {
         // TODO:
     }
 
+    /*
+     *
+     */
+    public abstract void createPins(Program program);
+
     public void addPin(Pin pin) {
         pins.add(pin);
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public ArrayList<Pin> getPins() {
         return pins;
     }
 
+    public HashMap<String, Var> getVars() {
+        return vars;
+    }
+
     public String getName() {
         return name;
     }
-
-    /*
-     *
-     */
-    public abstract void createPins(Program program);
 }

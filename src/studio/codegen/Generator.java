@@ -3,7 +3,7 @@ package studio.codegen;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import studio.program.Program;
-import studio.program.Signal;
+import studio.program.Var;
 import studio.program.element.Block;
 import studio.program.element.Element;
 import studio.program.element.Link;
@@ -20,7 +20,7 @@ public class Generator {
     private final String TAB = "    ";
     private final Logger LOGGER = LoggerFactory.getLogger(Generator.class);
 
-    private String outputFilePath = "C:\\Users\\Harris\\Desktop\\gen\\gen.ino";
+    private String outputFilePath = "C:\\Users\\family\\Desktop\\gen\\gen.ino";
     private PrintWriter writer = null;
 
     /*
@@ -46,17 +46,23 @@ public class Generator {
     /*
      *
      */
-    private EnumMap<Signal.Type, String> typeStringMap = null;
+    private EnumMap<Var.Type, String> typeStringMap = null;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Generator() {
-        typeStringMap = new EnumMap<Signal.Type, String>(Signal.Type.class);
-        typeStringMap.put(Signal.Type.DISCRETE, "u8");
-        typeStringMap.put(Signal.Type.ANALOG, "f32");
-        typeStringMap.put(Signal.Type.NUMBER, "f32");
+        typeStringMap = new EnumMap<Var.Type, String>(Var.Type.class);
+        typeStringMap.put(Var.Type.DISCRETE_SIGNAL, "bool");
+        typeStringMap.put(Var.Type.U8,                "u8");
+        typeStringMap.put(Var.Type.U16,              "u16");
+        typeStringMap.put(Var.Type.U32,              "u32");
+        typeStringMap.put(Var.Type.I8,                "i8");
+        typeStringMap.put(Var.Type.I16,              "i16");
+        typeStringMap.put(Var.Type.I32,              "i32");
+        typeStringMap.put(Var.Type.F32,              "f32");
+        typeStringMap.put(Var.Type.F64,              "f64");
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -154,13 +160,16 @@ public class Generator {
             puts(TAB + "// pins");
 
             for (Pin p : b.getPins()) {
-                statement(TAB + typeStringMap.get(p.getSignal().getType()) + " *p" + p.getIndex());
+                statement(TAB + typeStringMap.get(p.getVar().getType()) + " *p" + p.getIndex());
             }
 
             puts(TAB + "// variables");
 
-            for (String line : genFileDictionary.get(b.getName()).getDefLines()) {
-                puts(TAB + line);
+            HashMap<String, Var> vars = b.getVars();
+
+            for (String varName : vars.keySet()) {
+                Var v = vars.get(varName);
+                statement(TAB + typeStringMap.get(v.getType()) + " " + varName);
             }
 
             statement("} b_"  + b.getName() + "_t");
@@ -190,7 +199,7 @@ public class Generator {
 
     private void generateVariables() {
         for (Link l : links) {
-            statement(typeStringMap.get(l.getSource().getSignal().getType()) + " l" + l.getUID());
+            statement(typeStringMap.get(l.getSource().getVar().getType()) + " l" + l.getUID());
         }
 
         nl();
@@ -213,6 +222,14 @@ public class Generator {
                 statement(TAB + "b" + b.getUID() + ".p" + p.getIndex() + " = &l" + p.getLink().getUID());
             }
             //
+
+            HashMap<String, Var> vars = b.getVars();
+
+            for (String varName : vars.keySet()) {
+                Var v = vars.get(varName);
+                statement(TAB + "b" + b.getUID() + "." + varName + " = " + v.getValue());
+            }
+
             for (String line : genFileDictionary.get(b.getName()).getInitLines()) {
                 line = line.replace("$VAR(", "(b" + b.getUID() + ".");
                 puts(TAB + line);

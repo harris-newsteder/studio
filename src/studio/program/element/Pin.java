@@ -2,7 +2,7 @@ package studio.program.element;
 
 import javafx.scene.canvas.GraphicsContext;
 import studio.App;
-import studio.program.Signal;
+import studio.program.Var;
 
 public class Pin extends Element {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -57,7 +57,7 @@ public class Pin extends Element {
     /*
      *
      */
-    private Signal signal = null;
+    private Var var = null;
 
     /*
      *
@@ -79,13 +79,13 @@ public class Pin extends Element {
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public Pin(Block parent, Signal.Type type, Flow flow) {
+    public Pin(Block parent, Var.Type type, Flow flow) {
         super();
         eid = EID;
         this.parent = parent;
         this.flow = flow;
-        signal = new Signal();
-        signal.setType(type);
+        var = new Var();
+        var.setType(type);
     }
 
 
@@ -194,8 +194,8 @@ public class Pin extends Element {
         this.linked = linked;
     }
 
-    public Signal getSignal() {
-        return signal;
+    public Var getVar() {
+        return var;
     }
 
     public void setIndex(int index) {
