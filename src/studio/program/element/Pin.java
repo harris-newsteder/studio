@@ -79,13 +79,12 @@ public class Pin extends Element {
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public Pin(Block parent, Var.Type type, Flow flow) {
+    public Pin(Block parent, Var var, Flow flow) {
         super();
         eid = EID;
         this.parent = parent;
         this.flow = flow;
-        var = new Var();
-        var.setType(type);
+        this.var = var;
     }
 
 

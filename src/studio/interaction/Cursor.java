@@ -1,8 +1,8 @@
-package studio.program;
+package studio.interaction;
 
 public class Cursor {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //
+    // VARIABLES
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /*
@@ -14,38 +14,38 @@ public class Cursor {
     private double ry = 0;
 
     /*
-     * the position of the cursor in the graph
+     * the position of the cursor in the view
      * x : [-inf, +inf]
      * y : [-inf, +inf]
      */
-    private double gx = 0;
-    private double gy = 0;
+    private double vx = 0;
+    private double vy = 0;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //
+    // CONSTRUCTOR
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Cursor() {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //
+    // GETTERS & SETTERS
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public double getGraphX() {
-        return gx;
+    public double getViewX() {
+        return vx;
     }
 
-    public void setGraphX(double gx) {
-        this.gx = gx;
+    public void setViewX(double vx) {
+        this.vx = vx;
     }
 
-    public double getGraphY() {
-        return gy;
+    public double getViewY() {
+        return vy;
     }
 
-    public void setGraphY(double gy) {
-        this.gy = gy;
+    public void setViewY(double vy) {
+        this.vy = vy;
     }
 
     public double getRealX() {

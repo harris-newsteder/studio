@@ -1,10 +1,9 @@
-package studio.program.interaction;
+package studio.interaction;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
-import studio.program.Cursor;
 
 public abstract class Tool {
     protected Cursor cursor = null;
@@ -13,7 +12,7 @@ public abstract class Tool {
 
     public Tool(InteractionManager manager) {
         this.manager = manager;
-        this.cursor = manager.getProgram().getCursor();
+        this.cursor = manager.getCursor();
     }
 
     public abstract void draw(GraphicsContext gc);

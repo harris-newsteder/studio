@@ -1,4 +1,4 @@
-package studio.program.interaction;
+package studio.interaction;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;

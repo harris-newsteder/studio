@@ -1,4 +1,4 @@
-package studio.codegen;
+package studio.gen;
 
 import java.io.BufferedReader;
 import java.io.File;

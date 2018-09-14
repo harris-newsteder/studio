@@ -1,8 +1,7 @@
-package studio.program.interaction;
+package studio.interaction;
 
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
-import studio.program.Cursor;
 
 // TODO: remove uneccessary MouseEvent arguments
 // TODO: remove onMouseMoved and OnScroll and change to more standardized function calls: being, drag, end?????

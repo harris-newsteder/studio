@@ -1,4 +1,4 @@
-package studio.program.interaction;
+package studio.interaction;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.*;
@@ -9,6 +9,7 @@ import studio.program.element.Element;
 import studio.program.element.Link;
 import studio.program.element.LinkSection;
 import studio.program.element.Pin;
+import studio.view.View;
 
 import java.util.ArrayList;
 
@@ -72,8 +73,8 @@ public class TLink extends Tool {
     public void onMouseMoved(MouseEvent event) {
         if (!active) return;
 
-        double gridSnapX = Math.round(cursor.getGraphX() / Program.GRID_SIZE) * Program.GRID_SIZE;
-        double gridSnapY = Math.round(cursor.getGraphY() / Program.GRID_SIZE) * Program.GRID_SIZE;
+        double gridSnapX = Math.round(cursor.getViewX() / View.GRID_SIZE) * View.GRID_SIZE;
+        double gridSnapY = Math.round(cursor.getViewY() / View.GRID_SIZE) * View.GRID_SIZE;
 
         double dx = gridSnapX - csHorizontal.getStartX();
         double dy = gridSnapY - csHorizontal.getStartY();
@@ -173,8 +174,8 @@ public class TLink extends Tool {
 
         double ex = csVertical.getEndX();
         double ey = csVertical.getEndY();
-        double gridSnapX = Math.round(cursor.getGraphX() / Program.GRID_SIZE) * Program.GRID_SIZE;
-        double gridSnapY = Math.round(cursor.getGraphY() / Program.GRID_SIZE) * Program.GRID_SIZE;
+        double gridSnapX = Math.round(cursor.getViewX() / View.GRID_SIZE) * View.GRID_SIZE;
+        double gridSnapY = Math.round(cursor.getViewY() / View.GRID_SIZE) * View.GRID_SIZE;
 
         if (end != null && ex == gridSnapX && ey == gridSnapY) {
             attempLink(end);

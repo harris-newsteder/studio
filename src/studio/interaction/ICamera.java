@@ -1,9 +1,8 @@
-package studio.program.interaction;
+package studio.interaction;
 
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
-import studio.program.Camera;
-import studio.program.Cursor;
+import studio.view.Camera;
 
 public class ICamera extends Interaction {
 
@@ -18,7 +17,7 @@ public class ICamera extends Interaction {
 
     public ICamera(InteractionManager manager, Cursor cursor) {
         super(manager, cursor);
-        camera = manager.getProgram().getCamera();
+        camera = manager.getView().getCamera();
     }
 
     @Override
@@ -51,6 +50,7 @@ public class ICamera extends Interaction {
 
     @Override
     public void onScroll(ScrollEvent event) {
+        // TODO: better interaction here (center on zoom location)
         double z = camera.getZoom();
 
         if (event.getDeltaY() > 0) {

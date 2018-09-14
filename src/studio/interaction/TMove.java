@@ -1,4 +1,4 @@
-package studio.program.interaction;
+package studio.interaction;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
@@ -7,6 +7,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import studio.program.Program;
 import studio.program.element.Block;
+import studio.view.View;
 
 public class TMove extends Tool {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -64,8 +65,8 @@ public class TMove extends Tool {
         active = true;
 
         drag = (Block)manager.getHover();
-        dragOffsetX = cursor.getGraphX() - drag.getX();
-        dragOffsetY = cursor.getGraphY() - drag.getY();
+        dragOffsetX = cursor.getViewX() - drag.getX();
+        dragOffsetY = cursor.getViewY() - drag.getY();
     }
 
     @Override
@@ -82,8 +83,8 @@ public class TMove extends Tool {
     public void onMouseDragged(MouseEvent event) {
         if (!active) return;
         drag.setPosition(
-                Math.round((cursor.getGraphX() - dragOffsetX) / Program.GRID_SIZE) * Program.GRID_SIZE,
-                Math.round((cursor.getGraphY() - dragOffsetY) / Program.GRID_SIZE) * Program.GRID_SIZE
+                Math.round((cursor.getViewX() - dragOffsetX) / View.GRID_SIZE) * View.GRID_SIZE,
+                Math.round((cursor.getViewY() - dragOffsetY) / View.GRID_SIZE) * View.GRID_SIZE
         );
     }
 

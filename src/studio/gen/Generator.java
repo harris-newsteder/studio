@@ -1,4 +1,4 @@
-package studio.codegen;
+package studio.gen;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +20,7 @@ public class Generator {
     private final String TAB = "    ";
     private final Logger LOGGER = LoggerFactory.getLogger(Generator.class);
 
-    private String outputFilePath = "C:\\Users\\family\\Desktop\\gen\\gen.ino";
+    private String outputFilePath = "C:\\Users\\Harris\\Desktop\\gen\\gen.ino";
     private PrintWriter writer = null;
 
     /*
@@ -55,6 +55,8 @@ public class Generator {
     public Generator() {
         typeStringMap = new EnumMap<Var.Type, String>(Var.Type.class);
         typeStringMap.put(Var.Type.DISCRETE_SIGNAL, "bool");
+        typeStringMap.put(Var.Type.ANALOG_SIGNAL,    "u16");
+        typeStringMap.put(Var.Type.NUMBER,           "f32");
         typeStringMap.put(Var.Type.U8,                "u8");
         typeStringMap.put(Var.Type.U16,              "u16");
         typeStringMap.put(Var.Type.U32,              "u32");
@@ -166,9 +168,10 @@ public class Generator {
             puts(TAB + "// variables");
 
             HashMap<String, Var> vars = b.getVars();
+            Var v;
 
             for (String varName : vars.keySet()) {
-                Var v = vars.get(varName);
+                v = vars.get(varName);
                 statement(TAB + typeStringMap.get(v.getType()) + " " + varName);
             }
 
@@ -216,20 +219,22 @@ public class Generator {
         puts("{");
 
         for (Block b : blocks) {
-            //
+            // pins
             for (Pin p : b.getPins()) {
                 if (!p.isLinked()) continue;
                 statement(TAB + "b" + b.getUID() + ".p" + p.getIndex() + " = &l" + p.getLink().getUID());
             }
-            //
+            // vars
 
             HashMap<String, Var> vars = b.getVars();
+            Var v;
 
             for (String varName : vars.keySet()) {
-                Var v = vars.get(varName);
-                statement(TAB + "b" + b.getUID() + "." + varName + " = " + v.getValue());
+                v = vars.get(varName);
+                statement(TAB + "(b" + b.getUID() +  "." + varName + ") = " + v.getValue());
             }
 
+            // custom
             for (String line : genFileDictionary.get(b.getName()).getInitLines()) {
                 line = line.replace("$VAR(", "(b" + b.getUID() + ".");
                 puts(TAB + line);

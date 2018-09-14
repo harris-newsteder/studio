@@ -1,0 +1,18 @@
+#init
+
+$VAR(old_time) = millis();
+
+#fn
+
+$VAR(dt) = (millis() - $VAR(old_time)) / 1000.0;
+$VAR(old_time) = millis();
+$VAR(timer) += $VAR(dt);
+
+if ($VAR(timer) > (1.0 / $VAR(frequency))) {
+    if ($PIN(0)) {
+        $PIN(0) = 0;
+    } else {
+        $PIN(0) = 1;
+    }
+    $VAR(timer) = 0.0;
+}

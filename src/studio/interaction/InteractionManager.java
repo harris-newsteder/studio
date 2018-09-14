@@ -1,18 +1,20 @@
-package studio.program.interaction;
+package studio.interaction;
 
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import studio.program.Cursor;
+import studio.gen.Generator;
 import studio.program.Program;
 import studio.program.element.Element;
+import studio.view.View;
 
 import java.util.EnumMap;
 
 public class InteractionManager {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //
+    // CONSTANTS
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public enum InteractionType {
@@ -27,10 +29,13 @@ public class InteractionManager {
     };
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //
+    // VARIABLES
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private final Logger logger = LoggerFactory.getLogger(InteractionManager.class);
+    /*
+     *
+     */
+    private final Logger LOGGER = LoggerFactory.getLogger(InteractionManager.class);
 
     /*
      *
@@ -40,17 +45,22 @@ public class InteractionManager {
     /*
      *
      */
+    private View view = null;
+
+    /*
+     *
+     */
     private Cursor cursor = null;
 
     /*
      *
      */
-    private Element hover = null;
+    private Collider collider = null;
 
     /*
      *
      */
-    private Collider collider = null;
+    private Element hover = null;
 
     /*
      *
@@ -72,14 +82,22 @@ public class InteractionManager {
      */
     private EnumMap<ToolType, Tool> tools = null;
 
+    /*
+     *
+     */
+    private Generator generator = null;
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //
+    // CONSTRUCTOR
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public InteractionManager(Program program) {
+    public InteractionManager(Program program, View view, Canvas canvas) {
         this.program = program;
-        this.cursor = program.getCursor();
+        this.view = view;
+        this.cursor = new Cursor();
         this.collider = new Collider(cursor, program.getElements());
+
+        generator = new Generator();
 
         interactions = new EnumMap<InteractionType, Interaction>(InteractionType.class);
         interactions.put(InteractionType.NONE,       new INone(this, cursor));
@@ -89,17 +107,33 @@ public class InteractionManager {
         tools.put(ToolType.GROUP, new TGroup(this));
         tools.put(ToolType.LINK, new TLink(this));
         tools.put(ToolType.MOVE, new TMove(this));
+
+        canvas.setFocusTraversable(true);
+        canvas.setOnMouseMoved(          event -> {onMouseMoved(event);});
+        canvas.setOnMousePressed(        event -> {onMousePressed(event);});
+        canvas.setOnMouseReleased(       event -> {onMouseReleased(event);});
+        canvas.setOnMouseDragged(        event -> {onMouseDragged(event);});
+        canvas.setOnScroll(              event -> {onScroll(event);});
+        canvas.setOnContextMenuRequested(event -> {onContextMenuRequested(event);});
+        canvas.setOnKeyPressed(          event -> {onKeyPressed(event);});
+        canvas.setOnMouseClicked(        event -> {onMouseClicked(event);});
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //
+    // PUBLIC FUNCTIONS
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void draw(GraphicsContext gc) {
         tools.get(currentTool).draw(gc);
     }
 
-    public void onMouseMoved(MouseEvent event) {
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // EVENT CALLBACKS
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void onMouseMoved(MouseEvent event) {
+        updateCursorPosition(event.getX(), event.getY());
+
         Element nh = collider.checkElements();
 
         if (nh != hover) {
@@ -112,7 +146,7 @@ public class InteractionManager {
         tools.get(currentTool).onMouseMoved(event);
     }
 
-    public void onMousePressed(MouseEvent event) {
+    private void onMousePressed(MouseEvent event) {
         switch (event.getButton()) {
             case MIDDLE:
                 currentInteraction = InteractionType.CAMERA;
@@ -125,44 +159,67 @@ public class InteractionManager {
         interactions.get(currentInteraction).onMousePressed(event);
     }
 
-    public void onMouseReleased(MouseEvent event) {
+    private void onMouseReleased(MouseEvent event) {
         interactions.get(currentInteraction).onMouseReleased(event);
         tools.get(currentTool).onMouseReleased(event);
         currentInteraction = InteractionType.NONE;
     }
 
-    public void onMouseClicked(MouseEvent event) {
+    private void onMouseClicked(MouseEvent event) {
         tools.get(currentTool).onMouseClicked(event);
     }
 
-    public void onMouseDragged(MouseEvent event) {
+    private void onMouseDragged(MouseEvent event) {
+        updateCursorPosition(event.getX(), event.getY());
         interactions.get(currentInteraction).onMouseDragged(event);
         tools.get(currentTool).onMouseDragged(event);
     }
 
-    public void onScroll(ScrollEvent event) {
+    private void onScroll(ScrollEvent event) {
         // TODO: hmmm
         interactions.get(InteractionType.CAMERA).onScroll(event);
     }
 
-    public void onContextMenuRequested(ContextMenuEvent event) {
+    private void onContextMenuRequested(ContextMenuEvent event) {
 
     }
 
-    public void onKeyPressed(KeyEvent event) {
+    private void onKeyPressed(KeyEvent event) {
         switch (event.getCode()) {
             case L:
                 currentTool = ToolType.LINK;
-                logger.info("switching to tool: LINK");
+                LOGGER.info("switching to tool: LINK");
                 break;
             case M:
                 currentTool = ToolType.MOVE;
-                logger.info("switching to tool: MOVE");
+                LOGGER.info("switching to tool: MOVE");
+                break;
+            case ENTER:
+                try {
+                    generator.generate(program);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
         }
 
         tools.get(currentTool).onKeyPressed(event);
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // PRIVATE FUNCTIONS
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void updateCursorPosition(double rx, double ry) {
+        cursor.setRealX(rx);
+        cursor.setRealY(ry);
+        cursor.setViewX(view.getCamera().getTranslateX() + (rx / view.getCamera().getZoom()));
+        cursor.setViewY(view.getCamera().getTranslateY() + (ry / view.getCamera().getZoom()));
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // GETTERS & SETTERS
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Element getHover() {
         return hover;
@@ -172,7 +229,13 @@ public class InteractionManager {
         return program;
     }
 
-    public Collider getCollider() {
-        return collider;
+    public View getView() {
+        return view;
     }
+
+    public Cursor getCursor() {
+        return cursor;
+    }
+
+
 }

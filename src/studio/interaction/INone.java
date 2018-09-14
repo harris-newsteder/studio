@@ -1,8 +1,7 @@
-package studio.program.interaction;
+package studio.interaction;
 
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
-import studio.program.Cursor;
 
 public class INone extends Interaction {
     public INone(InteractionManager manager, Cursor cursor) {

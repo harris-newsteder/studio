@@ -8,7 +8,9 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import studio.interaction.InteractionManager;
 import studio.program.Program;
+import studio.view.View;
 
 public class App extends Application {
     public static final Color COLOR_DARK = Color.rgb(40, 40, 40);
@@ -19,16 +21,20 @@ public class App extends Application {
 
     private boolean running = true;
 
+    private Program program = null;
+    private View view = null;
+    private InteractionManager interactionManager = null;
+
     @Override
     public void start(Stage primaryStage) throws Exception {
 
         Pane root = new Pane();
         Canvas canvas = new Canvas();
-
         root.getChildren().add(canvas);
 
-        Program program = new Program();
-        program.setCanvas(canvas);
+        program = new Program();
+        view = new View(program);
+        interactionManager = new InteractionManager(program, view, canvas);
 
         canvas.widthProperty().bind(root.widthProperty());
         canvas.heightProperty().bind(root.heightProperty());
@@ -52,7 +58,7 @@ public class App extends Application {
         AnimationTimer drawTask = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                program.draw();
+                view.draw(canvas.getGraphicsContext2D());
             }
         };
         drawTask.start();

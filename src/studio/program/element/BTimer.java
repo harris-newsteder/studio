@@ -3,13 +3,16 @@ package studio.program.element;
 import studio.program.Program;
 import studio.program.Var;
 
-public class BDiscreteInput extends Block {
-    public BDiscreteInput() {
+public class BTimer extends Block {
+    public BTimer() {
         super();
-        text = "DI";
-        name = "discrete_input";
+        text = "TIMER";
+        name = "timer";
 
-        vars.put("input_pin", new Var(Var.Type.U8, 6.0));
+        vars.put("frequency", new Var(Var.Type.U8, 2.0));
+        vars.put("old_time", new Var(Var.Type.U32, 0.0));
+        vars.put("dt", new Var(Var.Type.F32, 0.0));
+        vars.put("timer", new Var(Var.Type.F32, 0.0));
     }
 
     @Override

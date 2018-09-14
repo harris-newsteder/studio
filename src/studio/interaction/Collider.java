@@ -1,6 +1,5 @@
-package studio.program.interaction;
+package studio.interaction;
 
-import studio.program.Cursor;
 import studio.program.element.Element;
 
 import java.util.ArrayList;
@@ -19,7 +18,7 @@ public class Collider {
         Element ret = null;
 
         for (Element e : elements) {
-            if (e.containsPoint(cursor.getGraphX(), cursor.getGraphY())) {
+            if (e.containsPoint(cursor.getViewX(), cursor.getViewY())) {
                 ret = e;
             }
         }

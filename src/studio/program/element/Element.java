@@ -4,7 +4,15 @@ import javafx.scene.canvas.GraphicsContext;
 import studio.util.UID;
 
 public abstract class Element {
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     public static final String EID = "element";
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /*
      *
@@ -17,7 +25,7 @@ public abstract class Element {
     protected boolean alive = true;
 
     /*
-     * element identifier, a string that identifies which type of element this is
+     *
      */
     protected String eid = "";
 
@@ -49,9 +57,14 @@ public abstract class Element {
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    public void kill() {
+        alive = false;
+    }
+
     public void onEnter() {
         hover = true;
     }
+
     public void onExit() {
         hover = false;
     }
@@ -66,10 +79,6 @@ public abstract class Element {
 
     public boolean isAlive() {
         return alive;
-    }
-
-    public void kill() {
-        alive = false;
     }
 
     public String getEID() {
