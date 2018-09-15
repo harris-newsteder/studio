@@ -2,12 +2,14 @@ package studio.program.element;
 
 import javafx.scene.canvas.GraphicsContext;
 import studio.App;
+import studio.interaction.shape.Circle;
 import studio.program.Var;
 
 public class Pin extends Element {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //
+    // CONSTANTS
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     public static final String EID = "pin";
 
     public enum Flow {
@@ -25,7 +27,7 @@ public class Pin extends Element {
     public static final double LENGTH = 20;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //
+    // VARIABLES
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /*
@@ -51,7 +53,7 @@ public class Pin extends Element {
     /*
      *
      */
-    private final Flow flow;
+    public final Flow flow;
 
 
     /*
@@ -68,60 +70,69 @@ public class Pin extends Element {
     /*
      *
      */
-    private double radius = 6;
-
-    /*
-     *
-     */
     private int index = -1;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //
+    // CONSTRUCTOR
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Pin(Block parent, Var var, Flow flow) {
-        super();
-        eid = EID;
+        super(EID);
         this.parent = parent;
         this.flow = flow;
         this.var = var;
+
+        shape = new Circle();
+        ((Circle) shape).setRadius(6);
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // PUBLIC FUNCTIONS
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public void tick(double dt) {
-        this.x = parent.getX();
-        this.y = parent.getY();
+        double x, y;
+
+        x = parent.getShape().x;
+        y = parent.getShape().y;
+
         switch (side) {
             case TOP:
-                this.x += attachX;
-                this.y += attachY - LENGTH;
+                x += attachX;
+                y += attachY - LENGTH;
                 break;
             case RIGHT:
-                this.x += attachX + LENGTH;
-                this.y += attachY;
+                x += attachX + LENGTH;
+                y += attachY;
                 break;
             case BOTTOM:
-                this.x += attachX;
-                this.y += attachY + LENGTH;
+                x += attachX;
+                y += attachY + LENGTH;
                 break;
             case LEFT:
-                this.x += attachX - LENGTH;
-                this.y += attachY;
+                x += attachX - LENGTH;
+                y += attachY;
                 break;
         }
+
+        shape.x = x;
+        shape.y = y;
     }
 
     @Override
     public void draw(GraphicsContext gc) {
         gc.save();
-        gc.translate(x, y);
+
+        gc.translate(shape.x, shape.y);
+
         switch (side) {
             case TOP: gc.rotate(0); break;
             case RIGHT: gc.rotate(90); break;
             case BOTTOM: gc.rotate(180); break;
             case LEFT: gc.rotate(270); break;
         }
+
         gc.strokeLine(0, 0, 0, LENGTH);
 
         if (flow == Flow.INPUT) {
@@ -129,30 +140,21 @@ public class Pin extends Element {
             gc.strokeLine(0, LENGTH - 1.8, -3, LENGTH - 5);
         }
 
-        if (linked) {
-            gc.restore();
-            return;
-        }
+        gc.restore();
 
-        gc.fillOval(-radius, -radius, radius * 2, radius * 2);
-        gc.strokeOval(-radius, -radius, radius * 2, radius * 2);
+        if (linked) return;
+
+        gc.save();
+
+        shape.fill(gc);
+        shape.stroke(gc);
+
         if (hover) {
             gc.setFill(App.COLOR_HOVER_MASK);
-            gc.fillOval(-radius, -radius, radius * 2, radius * 2);
+            shape.fill(gc);
         }
+
         gc.restore();
-    }
-
-    @Override
-    public boolean containsPoint(double x, double y) {
-        double dx = Math.abs(x - this.x);
-        double dy = Math.abs(y - this.y);
-
-        if (dx > radius || dy > radius) return false;
-        if (dx + dy <= radius) return true;
-        if ((dx * dx) + (dy * dy) <= (radius * radius)) return true;
-
-        return false;
     }
 
     public void setAttachmentPoint(double x, double y) {
@@ -171,10 +173,6 @@ public class Pin extends Element {
 
     public Link getLink() {
         return link;
-    }
-
-    public Flow getFlow() {
-        return flow;
     }
 
     public void setSide(Side side) {

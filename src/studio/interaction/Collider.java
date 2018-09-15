@@ -1,5 +1,6 @@
 package studio.interaction;
 
+import studio.interaction.shape.Shape;
 import studio.program.element.Element;
 
 import java.util.ArrayList;
@@ -16,9 +17,11 @@ public class Collider {
 
     public Element checkElements() {
         Element ret = null;
+        Shape s = null;
 
         for (Element e : elements) {
-            if (e.containsPoint(cursor.getViewX(), cursor.getViewY())) {
+            s = e.getShape();
+            if (s.containsPoint(cursor.getViewX(), cursor.getViewY())) {
                 ret = e;
             }
         }

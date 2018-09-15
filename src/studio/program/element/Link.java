@@ -30,8 +30,7 @@ public class Link extends Element {
     private ArrayList<LinkSection> sections = null;
 
     public Link() {
-        super();
-        eid = Link.EID;
+        super(EID);
 
         sinks = new ArrayList<>();
         sections = new ArrayList<>();
@@ -49,22 +48,6 @@ public class Link extends Element {
             gc.strokeLine(ls.getStartX(), ls.getStartY(), ls.getEndX(), ls.getEndY());
         }
         gc.restore();
-    }
-
-    @Override
-    public boolean containsPoint(double x, double y) {
-        // go through every section and do a simple comparison to see if the requested point is "near" any on the of the
-        // sections
-        for (LinkSection ls : sections) {
-            if (ls.getOrientation() == LinkSection.Orientation.HORIZONTAL) {
-                if (x < ls.getStartX() || x > ls.getEndX()) continue;
-                if (Math.abs(y - ls.getStartY()) < INTERACTION_DISTANCE) return true;
-            } else {
-                if (y < ls.getStartY() || y > ls.getEndY()) continue;
-                if (Math.abs(x - ls.getStartX()) < INTERACTION_DISTANCE) return true;
-            }
-        }
-        return false;
     }
 
     public void setSource(Pin source) {

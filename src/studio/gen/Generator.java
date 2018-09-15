@@ -20,7 +20,7 @@ public class Generator {
     private final String TAB = "    ";
     private final Logger LOGGER = LoggerFactory.getLogger(Generator.class);
 
-    private String outputFilePath = "C:\\Users\\Harris\\Desktop\\gen\\gen.ino";
+    private String outputFilePath = "C:\\Users\\family\\Desktop\\gen\\gen.ino";
     private PrintWriter writer = null;
 
     /*
@@ -98,7 +98,7 @@ public class Generator {
         links = new ArrayList<>();
 
         for (Element e : program.getElements()) {
-            switch (e.getEID()) {
+            switch (e.eid) {
                 case Link.EID:
                     Link l = (Link)e;
 
@@ -202,13 +202,13 @@ public class Generator {
 
     private void generateVariables() {
         for (Link l : links) {
-            statement(typeStringMap.get(l.getSource().getVar().getType()) + " l" + l.getUID());
+            statement(typeStringMap.get(l.getSource().getVar().getType()) + " l" + l.uid);
         }
 
         nl();
 
         for (Block b : blocks) {
-            statement("b_" + b.getName() + "_t b" + b.getUID());
+            statement("b_" + b.getName() + "_t b" + b.uid);
         }
 
         nl();
@@ -222,7 +222,7 @@ public class Generator {
             // pins
             for (Pin p : b.getPins()) {
                 if (!p.isLinked()) continue;
-                statement(TAB + "b" + b.getUID() + ".p" + p.getIndex() + " = &l" + p.getLink().getUID());
+                statement(TAB + "b" + b.uid + ".p" + p.getIndex() + " = &l" + p.getLink().uid);
             }
             // vars
 
@@ -231,12 +231,12 @@ public class Generator {
 
             for (String varName : vars.keySet()) {
                 v = vars.get(varName);
-                statement(TAB + "(b" + b.getUID() +  "." + varName + ") = " + v.getValue());
+                statement(TAB + "(b" + b.uid +  "." + varName + ") = " + v.getValue());
             }
 
             // custom
             for (String line : genFileDictionary.get(b.getName()).getInitLines()) {
-                line = line.replace("$VAR(", "(b" + b.getUID() + ".");
+                line = line.replace("$VAR(", "(b" + b.uid + ".");
                 puts(TAB + line);
             }
             nl();
@@ -250,7 +250,7 @@ public class Generator {
         puts("void loop()");
         puts("{");
         for (Block b : blocks) {
-            statement(TAB + "b_" + b.getName() + "_fn(&b" + b.getUID() + ")");
+            statement(TAB + "b_" + b.getName() + "_fn(&b" + b.uid + ")");
         }
         puts("}");
     }

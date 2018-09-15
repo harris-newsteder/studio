@@ -5,6 +5,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import studio.interaction.shape.Rectangle;
+import studio.interaction.shape.Shape;
 import studio.program.Program;
 import studio.program.element.Block;
 import studio.view.View;
@@ -61,12 +63,13 @@ public class TMove extends Tool {
         active = false;
         if (event.getButton() != MouseButton.PRIMARY) return;
         if (manager.getHover() == null) return;
-        if (manager.getHover().getEID() != Block.EID) return;
+        if (manager.getHover().eid != Block.EID) return;
         active = true;
 
         drag = (Block)manager.getHover();
-        dragOffsetX = cursor.getViewX() - drag.getX();
-        dragOffsetY = cursor.getViewY() - drag.getY();
+        Shape ds = ((Block)manager.getHover()).getShape();
+        dragOffsetX = cursor.getViewX() - ds.x;
+        dragOffsetY = cursor.getViewY() - ds.y;
     }
 
     @Override
@@ -82,7 +85,10 @@ public class TMove extends Tool {
     @Override
     public void onMouseDragged(MouseEvent event) {
         if (!active) return;
-        drag.setPosition(
+
+        Rectangle r = (Rectangle)drag.getShape();
+
+        r.setPosition(
                 Math.round((cursor.getViewX() - dragOffsetX) / View.GRID_SIZE) * View.GRID_SIZE,
                 Math.round((cursor.getViewY() - dragOffsetY) / View.GRID_SIZE) * View.GRID_SIZE
         );

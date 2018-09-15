@@ -1,16 +1,8 @@
-package studio.program.element;
+package studio.interaction.shape;
 
 import javafx.scene.canvas.GraphicsContext;
-import studio.interaction.shape.Shape;
-import studio.util.UID;
 
-public abstract class Element {
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // CONSTANTS
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static final String EID = "element";
-
+public class Circle extends Shape {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // VARIABLES
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -18,66 +10,58 @@ public abstract class Element {
     /*
      *
      */
-    protected boolean hover = false;
-
-    /*
-     *
-     */
-    protected boolean alive = true;
-
-    /*
-     *
-     */
-    public final String eid;
-
-    /*
-     *
-     */
-    public final int uid;
-
-    /*
-     *
-     */
-    protected Shape shape;
+    private double radius = 40.0;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTOR
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public Element(String eid) {
-        this.eid = eid;
-        uid = UID.generate();
+    public Circle() {
+        super();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // PUBLIC FUNCTIONS
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public void kill() {
-        alive = false;
+    @Override
+    public boolean containsPoint(double x, double y) {
+        double dx = Math.abs(x - this.x);
+        double dy = Math.abs(y - this.y);
+
+        if (dx > radius || dy > radius) return false;
+        if (dx + dy <= radius) return true;
+        if ((dx * dx) + (dy * dy) <= (radius * radius)) return true;
+
+        return false;
     }
 
-    public void onEnter() {
-        hover = true;
+    @Override
+    public void stroke(GraphicsContext gc) {
+        gc.save();
+        gc.translate(x - radius, y - radius);
+        gc.strokeOval(0, 0, radius * 2, radius * 2);
+        gc.restore();
     }
 
-    public void onExit() {
-        hover = false;
+    @Override
+    public void fill(GraphicsContext gc) {
+        gc.save();
+        gc.translate(x - radius, y - radius);
+        gc.fillOval(0, 0, radius * 2, radius * 2);
+        gc.restore();
     }
-
-    // TODO: have draw in this class?????
-    public abstract void tick(double dt);
-    public abstract void draw(GraphicsContext gc);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // GETTERS & SETTERS
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public boolean isAlive() {
-        return alive;
+
+    public void setRadius(double radius) {
+        this.radius = radius;
     }
 
-    public Shape getShape() {
-        return shape;
+    public double getRadius() {
+        return radius;
     }
 }

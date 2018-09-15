@@ -4,6 +4,7 @@ import javafx.geometry.VPos;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.text.TextAlignment;
 import studio.App;
+import studio.interaction.shape.Rectangle;
 import studio.program.Program;
 import studio.program.Var;
 
@@ -26,31 +27,17 @@ public class BDiscreteOutput extends Block {
 
     @Override
     public void createPins(Program program) {
+        double w = ((Rectangle)shape).getWidth();
+        double h = ((Rectangle)shape).getHeight();
+
         Pin p0 = new Pin(this, new Var(Var.Type.DISCRETE_SIGNAL), Pin.Flow.INPUT);
         p0.setSide(Pin.Side.LEFT);
-        p0.setAttachmentPoint(-width / 2, 0);
+        p0.setAttachmentPoint(-w / 2, 0);
         p0.setIndex(0);
 
         program.addElement(p0);
 
         addPin(p0);
-    }
-
-    @Override
-    public void draw(GraphicsContext gc) {
-        gc.save();
-        gc.translate(x, y);
-        gc.fillRect(-width / 2, -height / 2, width, height);
-        gc.strokeRect(-width / 2, -height / 2, width, height);
-        if (hover) {
-            gc.setFill(App.COLOR_HOVER_MASK);
-            gc.fillRect(-width / 2, -height / 2, width, height);
-        }
-        gc.setTextAlign(TextAlignment.CENTER);
-        gc.setTextBaseline(VPos.CENTER);
-        gc.setFill(App.COLOR_DARK);
-        gc.strokePolyline(xs, ys, 6);
-        gc.restore();
     }
 
     @Override

@@ -4,6 +4,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import studio.interaction.shape.Shape;
 import studio.program.Program;
 import studio.program.element.Element;
 import studio.program.element.Link;
@@ -132,7 +133,7 @@ public class TLink extends Tool {
         if (hover == null) return;
 
         //
-        if (hover.getEID() != Pin.EID) {
+        if (hover.eid != Pin.EID) {
             logger.info("new links must start at a pin");
             return;
         }
@@ -148,16 +149,18 @@ public class TLink extends Tool {
         start = (Pin)manager.getHover();
         start.setLinked(true);
 
+        Shape ss = start.getShape();
+
         //
         csHorizontal = new LinkSection();
-        csHorizontal.setStartPosition(start.getX(), start.getY());
-        csHorizontal.setEndPosition(start.getX(), start.getY());
+        csHorizontal.setStartPosition(ss.x, ss.y);
+        csHorizontal.setEndPosition(ss.x, ss.y);
         csHorizontal.setOrientation(LinkSection.Orientation.HORIZONTAL);
 
         //
         csVertical = new LinkSection();
-        csVertical.setStartPosition(start.getX(), start.getY());
-        csVertical.setEndPosition(start.getX(), start.getY());
+        csVertical.setStartPosition(ss.x, ss.y);
+        csVertical.setEndPosition(ss.x, ss.y);
         csVertical.setOrientation(LinkSection.Orientation.VERTICAL);
 
         sections = new ArrayList<>();
@@ -199,7 +202,7 @@ public class TLink extends Tool {
         start.setLinked(false);
 
         // TODO: add link to link
-        if (!(end.getEID() == Pin.EID)) {
+        if (!(end.eid == Pin.EID)) {
             return;
         }
 
@@ -210,7 +213,7 @@ public class TLink extends Tool {
             return;
         }
 
-        if (start.getFlow() == endPin.getFlow()) {
+        if (start.flow == endPin.flow) {
             logger.info("both pins have the same flow (input / output)");
             return;
         }
@@ -225,7 +228,7 @@ public class TLink extends Tool {
 
         link.setSectionList(sections);
 
-        if (start.getFlow() == Pin.Flow.OUTPUT) {
+        if (start.flow == Pin.Flow.OUTPUT) {
             link.setSource(start);
             link.addSink(endPin);
         } else {

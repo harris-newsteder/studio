@@ -70,6 +70,10 @@ public class View {
 
         // draw all elements
 
+        gc.setStroke(App.COLOR_DARK);
+        gc.setFill(App.COLOR_WHITE);
+        gc.setLineWidth(2.0);
+
         for (Element e : program.getElements()) {
             e.draw(gc);
         }

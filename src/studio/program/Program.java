@@ -27,18 +27,6 @@ public class Program {
         b = new BTimer();
         addElement(b);
         b.createPins(this);
-
-        b = new BAnd();
-        addElement(b);
-        b.createPins(this);
-
-        b = new BDiscreteInput();
-        addElement(b);
-        b.createPins(this);
-
-        b = new BNot();
-        addElement(b);
-        b.createPins(this);
     }
 
     public void setCanvas(Canvas canvas) {

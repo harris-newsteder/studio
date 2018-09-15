@@ -4,6 +4,7 @@ import javafx.geometry.VPos;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.text.TextAlignment;
 import studio.App;
+import studio.interaction.shape.Rectangle;
 import studio.program.Program;
 import studio.program.Var;
 
@@ -37,16 +38,6 @@ public abstract class Block extends Element {
     /*
      *
      */
-    protected double width = 80;
-
-    /*
-     *
-     */
-    protected double height = 80;
-
-    /*
-     *
-     */
     protected String text = "";
 
     /*
@@ -59,10 +50,10 @@ public abstract class Block extends Element {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Block() {
-        super();
-        eid = EID;
+        super(EID);
         pins = new ArrayList<>();
         vars = new HashMap<>();
+        shape = new Rectangle();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -71,31 +62,15 @@ public abstract class Block extends Element {
 
     @Override
     public void draw(GraphicsContext gc) {
-        gc.save();
-        gc.translate(x, y);
-        gc.fillRect(-width / 2, -height / 2, width, height);
-        gc.strokeRect(-width / 2, -height / 2, width, height);
+        shape.fill(gc);
+        shape.stroke(gc);
+
         if (hover) {
+            gc.save();
             gc.setFill(App.COLOR_HOVER_MASK);
-            gc.fillRect(-width / 2, -height / 2, width, height);
+            shape.fill(gc);
+            gc.restore();
         }
-        gc.setTextAlign(TextAlignment.CENTER);
-        gc.setTextBaseline(VPos.CENTER);
-        gc.setFill(App.COLOR_DARK);
-        gc.fillText(text, 0, 0);
-        gc.restore();
-    }
-
-    @Override
-    public boolean containsPoint(double x, double y) {
-        if (x >= this.x - (width  / 2) &&
-            x <= this.x + (width  / 2) &&
-            y >= this.y - (height / 2) &&
-            y <= this.y + (height / 2)) {
-            return true;
-        }
-
-        return false;
     }
 
     @Override
@@ -106,16 +81,6 @@ public abstract class Block extends Element {
         for (Pin pin : pins) {
             pin.kill();
         }
-    }
-
-    @Override
-    public void setPosition(double x, double y) {
-        this.x = x;
-        this.y = y;
-
-        // when the block is moved all the pins "attached" to it need to update their own positions relative to their
-        // parent (i.e. this block)
-        // TODO:
     }
 
     /*
