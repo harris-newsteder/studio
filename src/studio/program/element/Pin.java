@@ -83,7 +83,7 @@ public class Pin extends Element {
         this.var = var;
 
         shape = new Circle();
-        ((Circle) shape).setRadius(6);
+        ((Circle)shape).radius = 6;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -94,8 +94,8 @@ public class Pin extends Element {
     public void tick(double dt) {
         double x, y;
 
-        x = parent.getShape().x;
-        y = parent.getShape().y;
+        x = parent.shape.x;
+        y = parent.shape.y;
 
         switch (side) {
             case TOP:

@@ -24,7 +24,15 @@ public class Program {
         addElement(b);
         b.createPins(this);
 
+        b = new BDiscreteInput();
+        addElement(b);
+        b.createPins(this);
+
         b = new BTimer();
+        addElement(b);
+        b.createPins(this);
+
+        b = new BAnd();
         addElement(b);
         b.createPins(this);
     }

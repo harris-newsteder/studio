@@ -218,6 +218,9 @@ public class Generator {
         puts("void setup()");
         puts("{");
 
+        statement(TAB + "Serial.begin(9600)");
+        nl();
+
         for (Block b : blocks) {
             // pins
             for (Pin p : b.getPins()) {

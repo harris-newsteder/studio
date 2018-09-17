@@ -10,7 +10,7 @@ public class Circle extends Shape {
     /*
      *
      */
-    private double radius = 40.0;
+    public double radius = 40.0;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTOR
@@ -50,18 +50,5 @@ public class Circle extends Shape {
         gc.translate(x - radius, y - radius);
         gc.fillOval(0, 0, radius * 2, radius * 2);
         gc.restore();
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // GETTERS & SETTERS
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-    public void setRadius(double radius) {
-        this.radius = radius;
-    }
-
-    public double getRadius() {
-        return radius;
     }
 }

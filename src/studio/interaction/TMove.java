@@ -67,7 +67,7 @@ public class TMove extends Tool {
         active = true;
 
         drag = (Block)manager.getHover();
-        Shape ds = ((Block)manager.getHover()).getShape();
+        Shape ds = manager.getHover().shape;
         dragOffsetX = cursor.getViewX() - ds.x;
         dragOffsetY = cursor.getViewY() - ds.y;
     }
@@ -86,12 +86,10 @@ public class TMove extends Tool {
     public void onMouseDragged(MouseEvent event) {
         if (!active) return;
 
-        Rectangle r = (Rectangle)drag.getShape();
+        Shape s = drag.shape;
 
-        r.setPosition(
-                Math.round((cursor.getViewX() - dragOffsetX) / View.GRID_SIZE) * View.GRID_SIZE,
-                Math.round((cursor.getViewY() - dragOffsetY) / View.GRID_SIZE) * View.GRID_SIZE
-        );
+        s.x = Math.round((cursor.getViewX() - dragOffsetX) / View.GRID_SIZE) * View.GRID_SIZE;
+        s.y = Math.round((cursor.getViewY() - dragOffsetY) / View.GRID_SIZE) * View.GRID_SIZE;
     }
 
     @Override

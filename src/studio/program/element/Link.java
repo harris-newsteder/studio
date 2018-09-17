@@ -4,13 +4,20 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import studio.interaction.shape.Polyline;
 
 import java.util.ArrayList;
 
 public class Link extends Element {
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // CONSTANTS
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     public static final String EID = "link";
 
-    public static final double INTERACTION_DISTANCE = 2;
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // VARIABLES
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private final Logger LOGGER = LoggerFactory.getLogger(Link.class);
 
@@ -24,16 +31,15 @@ public class Link extends Element {
      */
     private ArrayList<Pin> sinks = null;
 
-    /*
-     *
-     */
-    private ArrayList<LinkSection> sections = null;
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // CONSTRUCTOR
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Link() {
         super(EID);
 
         sinks = new ArrayList<>();
-        sections = new ArrayList<>();
+        shape = new Polyline();
     }
 
     @Override
@@ -43,10 +49,8 @@ public class Link extends Element {
     @Override
     public void draw(GraphicsContext gc) {
         gc.save();
-        if (hover) gc.setStroke(Color.CORNFLOWERBLUE);
-        for (LinkSection ls : sections) {
-            gc.strokeLine(ls.getStartX(), ls.getStartY(), ls.getEndX(), ls.getEndY());
-        }
+        if (hover) gc.setStroke(Color.RED);
+        shape.stroke(gc);
         gc.restore();
     }
 
@@ -68,9 +72,5 @@ public class Link extends Element {
             return;
         }
         sinks.add(sink);
-    }
-
-    public void setSectionList(ArrayList<LinkSection> sectionList) {
-        sections = sectionList;
     }
 }

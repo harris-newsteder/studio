@@ -20,7 +20,7 @@ public class Collider {
         Shape s = null;
 
         for (Element e : elements) {
-            s = e.getShape();
+            s = e.shape;
             if (s.containsPoint(cursor.getViewX(), cursor.getViewY())) {
                 ret = e;
             }

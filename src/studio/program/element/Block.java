@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /*
- * a block is a rectangular element that has pins
+ * a block is an element that performs a function on its pins
  */
 public abstract class Block extends Element {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -53,6 +53,8 @@ public abstract class Block extends Element {
         super(EID);
         pins = new ArrayList<>();
         vars = new HashMap<>();
+
+        // TODO: dont default shape to rectangle (ports use circles)
         shape = new Rectangle();
     }
 
@@ -62,8 +64,13 @@ public abstract class Block extends Element {
 
     @Override
     public void draw(GraphicsContext gc) {
+        gc.save();
+
         shape.fill(gc);
         shape.stroke(gc);
+
+        gc.setFill(App.COLOR_DARK);
+        gc.fillText(text, shape.x, shape.y);
 
         if (hover) {
             gc.save();
@@ -71,6 +78,8 @@ public abstract class Block extends Element {
             shape.fill(gc);
             gc.restore();
         }
+
+        gc.restore();
     }
 
     @Override

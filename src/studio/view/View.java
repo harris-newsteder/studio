@@ -1,6 +1,8 @@
 package studio.view;
 
+import javafx.geometry.VPos;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.text.TextAlignment;
 import studio.App;
 import studio.program.Program;
 import studio.program.element.Element;
@@ -48,7 +50,7 @@ public class View {
         double ch = gc.getCanvas().getHeight();
 
         gc.save();
-
+        gc.clearRect(0, 0, cw, ch);
         gc.setFill(App.COLOR_LIGHT);
         gc.fillRect(0, 0, cw, ch);
 
@@ -73,6 +75,8 @@ public class View {
         gc.setStroke(App.COLOR_DARK);
         gc.setFill(App.COLOR_WHITE);
         gc.setLineWidth(2.0);
+        gc.setTextAlign(TextAlignment.CENTER);
+        gc.setTextBaseline(VPos.CENTER);
 
         for (Element e : program.getElements()) {
             e.draw(gc);

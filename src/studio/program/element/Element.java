@@ -38,7 +38,7 @@ public abstract class Element {
     /*
      *
      */
-    protected Shape shape;
+    public Shape shape;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTOR
@@ -75,9 +75,5 @@ public abstract class Element {
 
     public boolean isAlive() {
         return alive;
-    }
-
-    public Shape getShape() {
-        return shape;
     }
 }
