@@ -1,18 +1,11 @@
-package studio.interaction;
+package studio.program.ui.interaction;
 
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 
-public class TGroup extends Tool {
-    public TGroup(InteractionManager manager) {
-        super(manager);
-    }
-
-    @Override
-    public void draw(GraphicsContext gc) {
-
+public class INone extends Interaction {
+    public INone(InteractionManager manager, Cursor cursor) {
+        super(manager, cursor);
     }
 
     @Override
@@ -31,22 +24,12 @@ public class TGroup extends Tool {
     }
 
     @Override
-    public void onKeyPressed(KeyEvent event) {
-
-    }
-
-    @Override
     public void onMouseDragged(MouseEvent event) {
 
     }
 
     @Override
     public void onScroll(ScrollEvent event) {
-
-    }
-
-    @Override
-    public void onMouseClicked(MouseEvent event) {
 
     }
 }

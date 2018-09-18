@@ -4,7 +4,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import studio.interaction.shape.Polyline;
+import studio.program.ui.shape.Polyline;
 
 import java.util.ArrayList;
 

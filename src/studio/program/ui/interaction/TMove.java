@@ -1,15 +1,13 @@
-package studio.interaction;
+package studio.program.ui.interaction;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
-import studio.interaction.shape.Rectangle;
-import studio.interaction.shape.Shape;
-import studio.program.Program;
+import studio.program.ui.shape.Shape;
 import studio.program.element.Block;
-import studio.view.View;
+import studio.program.ui.view.View;
 
 public class TMove extends Tool {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

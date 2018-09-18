@@ -1,4 +1,4 @@
-package studio.interaction;
+package studio.program.ui.interaction;
 
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;

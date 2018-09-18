@@ -1,7 +1,7 @@
 package studio.program.element;
 
 import javafx.scene.canvas.GraphicsContext;
-import studio.interaction.shape.Shape;
+import studio.program.ui.shape.Shape;
 import studio.util.UID;
 
 public abstract class Element {

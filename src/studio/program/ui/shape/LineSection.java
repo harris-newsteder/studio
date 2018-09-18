@@ -1,4 +1,4 @@
-package studio.interaction.shape;
+package studio.program.ui.shape;
 
 public class LineSection {
     public enum Orientation {

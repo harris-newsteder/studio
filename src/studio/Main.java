@@ -1,18 +1,10 @@
 package studio;
 
-import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import studio.interaction.InteractionManager;
-import studio.program.Program;
-import studio.view.View;
 
 public class Main extends Application {
     @Override

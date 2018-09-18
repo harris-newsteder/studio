@@ -1,7 +1,6 @@
 package studio.program.element;
 
-import studio.interaction.shape.Circle;
-import studio.interaction.shape.Rectangle;
+import studio.program.ui.shape.Circle;
 import studio.program.Program;
 import studio.program.Var;
 

@@ -1,8 +1,8 @@
-package studio.interaction;
+package studio.program.ui.interaction;
 
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
-import studio.view.Camera;
+import studio.program.ui.view.Camera;
 
 public class ICamera extends Interaction {
 

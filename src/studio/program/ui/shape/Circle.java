@@ -1,4 +1,4 @@
-package studio.interaction.shape;
+package studio.program.ui.shape;
 
 import javafx.scene.canvas.GraphicsContext;
 

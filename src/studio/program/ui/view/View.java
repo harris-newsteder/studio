@@ -1,11 +1,10 @@
-package studio.view;
+package studio.program.ui.view;
 
 import javafx.geometry.VPos;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
-import studio.Main;
-import studio.interaction.InteractionManager;
+import studio.program.ui.interaction.InteractionManager;
 import studio.program.Program;
 import studio.program.element.Element;
 
@@ -18,6 +17,7 @@ public class View {
     public static final Color COLOR_WHITE = Color.rgb(255, 255, 255);
     public static final Color COLOR_BLACK = Color.rgb(0, 0, 0);
     public static final Color COLOR_HOVER_MASK = Color.rgb(255, 0, 0, 0.1);
+    public static final Color COLOR_FOCUS_MASK = Color.rgb(255, 255, 255, 0.4);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTANTS
@@ -98,6 +98,11 @@ public class View {
         interactionManager.draw(gc);
 
         gc.restore();
+
+        if (!gc.getCanvas().isFocused()) {
+            gc.setFill(COLOR_FOCUS_MASK);
+            gc.fillRect(0, 0, cw, ch);
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

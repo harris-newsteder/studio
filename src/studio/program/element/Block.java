@@ -1,11 +1,10 @@
 package studio.program.element;
 
 import javafx.scene.canvas.GraphicsContext;
-import studio.Main;
-import studio.interaction.shape.Rectangle;
+import studio.program.ui.shape.Rectangle;
 import studio.program.Program;
 import studio.program.Var;
-import studio.view.View;
+import studio.program.ui.view.View;
 
 import java.util.ArrayList;
 import java.util.HashMap;

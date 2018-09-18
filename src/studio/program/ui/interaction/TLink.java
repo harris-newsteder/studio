@@ -1,16 +1,16 @@
-package studio.interaction;
+package studio.program.ui.interaction;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import studio.interaction.shape.LineSection;
-import studio.interaction.shape.Polyline;
-import studio.interaction.shape.Shape;
+import studio.program.ui.shape.LineSection;
+import studio.program.ui.shape.Polyline;
+import studio.program.ui.shape.Shape;
 import studio.program.element.Element;
 import studio.program.element.Link;
 import studio.program.element.Pin;
-import studio.view.View;
+import studio.program.ui.view.View;
 
 import java.util.ArrayList;
 

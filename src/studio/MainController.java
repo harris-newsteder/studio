@@ -6,9 +6,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.Pane;
-import studio.interaction.InteractionManager;
+import studio.program.ui.interaction.InteractionManager;
 import studio.program.Program;
-import studio.view.View;
+import studio.program.ui.view.View;
 
 import java.net.URL;
 import java.util.ResourceBundle;

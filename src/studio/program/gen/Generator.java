@@ -1,4 +1,4 @@
-package studio.gen;
+package studio.program.gen;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +20,7 @@ public class Generator {
     private final String TAB = "    ";
     private final Logger LOGGER = LoggerFactory.getLogger(Generator.class);
 
-    private String outputFilePath = "C:\\Users\\family\\Desktop\\gen\\gen.ino";
+    private String outputFilePath = "C:\\Users\\Harris\\Desktop\\gen\\gen.ino";
     private PrintWriter writer = null;
 
     /*

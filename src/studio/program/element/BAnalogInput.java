@@ -1,11 +1,10 @@
 package studio.program.element;
 
 import javafx.scene.canvas.GraphicsContext;
-import studio.Main;
-import studio.interaction.shape.Circle;
+import studio.program.ui.shape.Circle;
 import studio.program.Program;
 import studio.program.Var;
-import studio.view.View;
+import studio.program.ui.view.View;
 
 public class BAnalogInput extends Block {
 

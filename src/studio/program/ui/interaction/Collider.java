@@ -1,6 +1,6 @@
-package studio.interaction;
+package studio.program.ui.interaction;
 
-import studio.interaction.shape.Shape;
+import studio.program.ui.shape.Shape;
 import studio.program.element.Element;
 
 import java.util.ArrayList;

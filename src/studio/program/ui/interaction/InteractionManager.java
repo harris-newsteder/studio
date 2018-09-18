@@ -1,14 +1,14 @@
-package studio.interaction;
+package studio.program.ui.interaction;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import studio.gen.Generator;
+import studio.program.gen.Generator;
 import studio.program.Program;
 import studio.program.element.Element;
-import studio.view.View;
+import studio.program.ui.view.View;
 
 import java.util.EnumMap;
 
@@ -147,6 +147,9 @@ public class InteractionManager {
     }
 
     private void onMousePressed(MouseEvent event) {
+        // ~_~
+        ((Canvas)event.getSource()).requestFocus();
+
         switch (event.getButton()) {
             case MIDDLE:
                 currentInteraction = InteractionType.CAMERA;

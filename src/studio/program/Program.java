@@ -28,6 +28,10 @@ public class Program {
         b = new BAnd();
         addElement(b);
         b.createPins(this);
+
+        b = new BAnalogInput();
+        addElement(b);
+        b.createPins(this);
     }
 
     public void setCanvas(Canvas canvas) {
