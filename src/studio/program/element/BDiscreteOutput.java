@@ -1,13 +1,11 @@
 package studio.program.element;
 
-import javafx.geometry.VPos;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.text.TextAlignment;
-import studio.App;
+import studio.Main;
 import studio.interaction.shape.Circle;
-import studio.interaction.shape.Rectangle;
 import studio.program.Program;
 import studio.program.Var;
+import studio.view.View;
 
 public class BDiscreteOutput extends Block {
 
@@ -52,7 +50,7 @@ public class BDiscreteOutput extends Block {
         shape.stroke(gc);
 
         if (hover) {
-            gc.setFill(App.COLOR_HOVER_MASK);
+            gc.setFill(View.COLOR_HOVER_MASK);
             shape.fill(gc);
         }
 

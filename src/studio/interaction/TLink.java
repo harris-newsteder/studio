@@ -53,7 +53,10 @@ public class TLink extends Tool {
     @Override
     public void draw(GraphicsContext gc) {
         if (!active) return;
+
         gc.save();
+        gc.setStroke(View.COLOR_DARK);
+        gc.setLineWidth(2.0);
         for (LineSection ls : sections) {
             gc.strokeLine(ls.startX, ls.startY, ls.endX, ls.endY);
         }

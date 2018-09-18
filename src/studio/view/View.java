@@ -2,8 +2,10 @@ package studio.view;
 
 import javafx.geometry.VPos;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
-import studio.App;
+import studio.Main;
+import studio.interaction.InteractionManager;
 import studio.program.Program;
 import studio.program.element.Element;
 
@@ -11,6 +13,12 @@ import studio.program.element.Element;
  * this class draws a program with a given graphics context
  */
 public class View {
+    public static final Color COLOR_DARK = Color.rgb(40, 40, 40);
+    public static final Color COLOR_LIGHT = Color.rgb(245, 245, 245);
+    public static final Color COLOR_WHITE = Color.rgb(255, 255, 255);
+    public static final Color COLOR_BLACK = Color.rgb(0, 0, 0);
+    public static final Color COLOR_HOVER_MASK = Color.rgb(255, 0, 0, 0.1);
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTANTS
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -30,6 +38,11 @@ public class View {
      *
      */
     private Camera camera = null;
+
+    /*
+     *
+     */
+    public InteractionManager interactionManager = null;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTOR
@@ -51,7 +64,7 @@ public class View {
 
         gc.save();
         gc.clearRect(0, 0, cw, ch);
-        gc.setFill(App.COLOR_LIGHT);
+        gc.setFill(COLOR_LIGHT);
         gc.fillRect(0, 0, cw, ch);
 
         // camera transformation
@@ -72,8 +85,8 @@ public class View {
 
         // draw all elements
 
-        gc.setStroke(App.COLOR_DARK);
-        gc.setFill(App.COLOR_WHITE);
+        gc.setStroke(COLOR_DARK);
+        gc.setFill(COLOR_WHITE);
         gc.setLineWidth(2.0);
         gc.setTextAlign(TextAlignment.CENTER);
         gc.setTextBaseline(VPos.CENTER);
@@ -81,6 +94,8 @@ public class View {
         for (Element e : program.getElements()) {
             e.draw(gc);
         }
+
+        interactionManager.draw(gc);
 
         gc.restore();
     }
@@ -107,7 +122,7 @@ public class View {
         // draw all points
         // TODO: more efficient way of doing this?
         gc.save();
-        gc.setFill(App.COLOR_DARK);
+        gc.setFill(COLOR_DARK);
         for (int y = 0; y < ny; ++y) {
             for (int x = 0; x < nx; ++x) {
                 gc.fillRect((sx + (x * GRID_SIZE)) - 0.5, (sy + (y * GRID_SIZE)) - 0.5, 1, 1);

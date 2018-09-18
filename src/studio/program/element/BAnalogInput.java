@@ -1,10 +1,11 @@
 package studio.program.element;
 
 import javafx.scene.canvas.GraphicsContext;
-import studio.App;
+import studio.Main;
 import studio.interaction.shape.Circle;
 import studio.program.Program;
 import studio.program.Var;
+import studio.view.View;
 
 public class BAnalogInput extends Block {
 
@@ -51,7 +52,7 @@ public class BAnalogInput extends Block {
         shape.stroke(gc);
 
         if (hover) {
-            gc.setFill(App.COLOR_HOVER_MASK);
+            gc.setFill(View.COLOR_HOVER_MASK);
             shape.fill(gc);
         }
 

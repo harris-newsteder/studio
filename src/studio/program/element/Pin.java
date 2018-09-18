@@ -1,9 +1,10 @@
 package studio.program.element;
 
 import javafx.scene.canvas.GraphicsContext;
-import studio.App;
+import studio.Main;
 import studio.interaction.shape.Circle;
 import studio.program.Var;
+import studio.view.View;
 
 public class Pin extends Element {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -150,7 +151,7 @@ public class Pin extends Element {
         shape.stroke(gc);
 
         if (hover) {
-            gc.setFill(App.COLOR_HOVER_MASK);
+            gc.setFill(View.COLOR_HOVER_MASK);
             shape.fill(gc);
         }
 

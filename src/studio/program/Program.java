@@ -1,14 +1,7 @@
 package studio.program;
 
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.KeyCode;
-import studio.App;
-import studio.gen.Generator;
-import studio.interaction.Cursor;
 import studio.program.element.*;
-import studio.interaction.InteractionManager;
-import studio.view.Camera;
 
 import java.util.ArrayList;
 import java.util.Iterator;
