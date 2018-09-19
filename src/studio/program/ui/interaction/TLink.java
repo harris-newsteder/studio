@@ -4,6 +4,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import studio.program.dictionary.PinDefinition;
 import studio.program.ui.shape.LineSection;
 import studio.program.ui.shape.Polyline;
 import studio.program.ui.shape.Shape;
@@ -239,7 +240,7 @@ public class TLink extends Tool {
         Link link = new Link();
         ((Polyline)link.shape).sections = sections;
 
-        if (start.flow == Pin.Flow.OUTPUT) {
+        if (start.flow == PinDefinition.Flow.OUTPUT) {
             link.setSource(start);
             link.addSink(endPin);
         } else {

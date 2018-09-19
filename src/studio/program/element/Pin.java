@@ -1,6 +1,7 @@
 package studio.program.element;
 
 import javafx.scene.canvas.GraphicsContext;
+import studio.program.dictionary.PinDefinition;
 import studio.program.ui.shape.Circle;
 import studio.program.Var;
 import studio.program.ui.view.View;
@@ -11,18 +12,6 @@ public class Pin extends Element {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static final String EID = "pin";
-
-    public enum Flow {
-        INPUT,
-        OUTPUT
-    }
-
-    public enum Side {
-        TOP,
-        RIGHT,
-        BOTTOM,
-        LEFT
-    }
 
     public static final double LENGTH = 20;
 
@@ -48,12 +37,12 @@ public class Pin extends Element {
     /*
      *
      */
-    private Side side;
+    private PinDefinition.Side side;
 
     /*
      *
      */
-    public final Flow flow;
+    public final PinDefinition.Flow flow;
 
 
     /*
@@ -76,7 +65,7 @@ public class Pin extends Element {
     // CONSTRUCTOR
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public Pin(Block parent, Var var, Flow flow) {
+    public Pin(Block parent, Var var, PinDefinition.Flow flow) {
         super(EID);
         this.parent = parent;
         this.flow = flow;
@@ -135,7 +124,7 @@ public class Pin extends Element {
 
         gc.strokeLine(0, 0, 0, LENGTH);
 
-        if (flow == Flow.INPUT) {
+        if (flow == PinDefinition.Flow.INPUT) {
             gc.strokeLine(0, LENGTH - 1.8, 3, LENGTH - 5);
             gc.strokeLine(0, LENGTH - 1.8, -3, LENGTH - 5);
         }
@@ -175,11 +164,11 @@ public class Pin extends Element {
         return link;
     }
 
-    public void setSide(Side side) {
+    public void setSide(PinDefinition.Side side) {
         this.side = side;
     }
 
-    public Side getSide() {
+    public PinDefinition.Side getSide() {
         return side;
     }
 

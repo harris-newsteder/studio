@@ -26,10 +26,7 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         canvas = new Canvas();
-        program = new Program();
-        view = new View(program);
-        interactionManager = new InteractionManager(program, view, canvas);
-        view.interactionManager = interactionManager;
+        program = new Program(canvas);
 
         centerPane.getChildren().add(canvas);
 
@@ -53,7 +50,7 @@ public class MainController implements Initializable {
         AnimationTimer drawTask = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                view.draw(canvas.getGraphicsContext2D());
+                program.draw(canvas.getGraphicsContext2D());
             }
         };
         drawTask.start();

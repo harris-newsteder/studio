@@ -1,7 +1,13 @@
 package studio.program;
 
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import studio.program.dictionary.BlockDictionary;
+import studio.program.dictionary.def.AnalogInput;
+import studio.program.dictionary.def.And;
+import studio.program.dictionary.def.Not;
 import studio.program.element.*;
+import studio.program.ui.UI;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -9,35 +15,22 @@ import java.util.Iterator;
 public class Program {
     private ArrayList<Element> elements = null;
 
-    public Program() {
+    private UI ui = null;
+
+    public Program(Canvas canvas) {
         elements = new ArrayList<>();
 
+        ui = new UI(this, canvas);
+
         // TODO: remove
-        Block b = new BDiscreteOutput();
+        Block b = new Block(BlockDictionary.lookup(Not.NAME));
         addElement(b);
         b.createPins(this);
-
-        b = new BDiscreteInput();
-        addElement(b);
-        b.createPins(this);
-
-        b = new BTimer();
-        addElement(b);
-        b.createPins(this);
-
-        b = new BAnd();
-        addElement(b);
-        b.createPins(this);
-
-        b = new BAnalogInput();
-        addElement(b);
-        b.createPins(this);
-    }
-
-    public void setCanvas(Canvas canvas) {
     }
 
     public void tick(double dt) {
+        ui.tick(dt);
+
         Iterator i = elements.iterator();
 
         while (i.hasNext()) {
@@ -46,11 +39,15 @@ public class Program {
 
             // remove all dead elements from the list
             if (!e.isAlive()) {
-                // TODO: make sure this doesn't happen while a javafx thread update is happening, it will null pointer
+                // TODO: make sure this doesn't happen while a javafx thread update is happening, it will nullify
                 // something that is trying to draw to the screen
                 i.remove();
             }
         }
+    }
+
+    public void draw(GraphicsContext gc) {
+        ui.draw(gc);
     }
 
     public void addElement(Element element) {
