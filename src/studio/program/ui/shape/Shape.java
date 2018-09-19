@@ -31,7 +31,7 @@ public abstract class Shape {
 
     public abstract boolean containsPoint(double x, double y);
 
-    // TODO: I'm not sure these function belong here
+    // TODO: I'm not sure these functions belong here
     public abstract void stroke(GraphicsContext gc);
     public abstract void fill(GraphicsContext gc);
 }

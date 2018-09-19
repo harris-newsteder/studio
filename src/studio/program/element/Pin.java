@@ -1,7 +1,6 @@
 package studio.program.element;
 
 import javafx.scene.canvas.GraphicsContext;
-import studio.program.dictionary.PinDefinition;
 import studio.program.ui.shape.Circle;
 import studio.program.Var;
 import studio.program.ui.view.View;
@@ -15,6 +14,18 @@ public class Pin extends Element {
 
     public static final double LENGTH = 20;
 
+    public enum Flow {
+        INPUT,
+        OUTPUT
+    }
+
+    public enum Side {
+        TOP,
+        RIGHT,
+        BOTTOM,
+        LEFT
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // VARIABLES
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -22,7 +33,7 @@ public class Pin extends Element {
     /*
      *
      */
-    private Block parent = null;
+    public final Block parent;
 
     /*
      *
@@ -37,18 +48,18 @@ public class Pin extends Element {
     /*
      *
      */
-    private PinDefinition.Side side;
+    public Side side;
 
     /*
      *
      */
-    public final PinDefinition.Flow flow;
+    public Flow flow;
 
 
     /*
      *
      */
-    private Var var = null;
+    public Var var = null;
 
     /*
      *
@@ -59,17 +70,15 @@ public class Pin extends Element {
     /*
      *
      */
-    private int index = -1;
+    public int index = -1;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTOR
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public Pin(Block parent, Var var, PinDefinition.Flow flow) {
+    public Pin(Block parent) {
         super(EID);
         this.parent = parent;
-        this.flow = flow;
-        this.var = var;
 
         shape = new Circle();
         ((Circle)shape).radius = 6;
@@ -124,23 +133,19 @@ public class Pin extends Element {
 
         gc.strokeLine(0, 0, 0, LENGTH);
 
-        if (flow == PinDefinition.Flow.INPUT) {
+        // TODO: use a triangle instead of stroke line
+        if (flow == Flow.INPUT) {
             gc.strokeLine(0, LENGTH - 1.8, 3, LENGTH - 5);
             gc.strokeLine(0, LENGTH - 1.8, -3, LENGTH - 5);
         }
 
-        gc.restore();
-
-        if (linked) return;
-
-        gc.save();
-
-        shape.fill(gc);
-        shape.stroke(gc);
-
-        if (hover) {
-            gc.setFill(View.COLOR_HOVER_MASK);
+        if (!linked) {
             shape.fill(gc);
+            shape.stroke(gc);
+            if (hover) {
+                gc.setFill(View.COLOR_HOVER_MASK);
+                shape.fill(gc);
+            }
         }
 
         gc.restore();
@@ -149,10 +154,6 @@ public class Pin extends Element {
     public void setAttachmentPoint(double x, double y) {
         this.attachX = x;
         this.attachY = y;
-    }
-
-    public Block getParent() {
-        return parent;
     }
 
     public void link(Link link) {
@@ -164,28 +165,12 @@ public class Pin extends Element {
         return link;
     }
 
-    public void setSide(PinDefinition.Side side) {
-        this.side = side;
-    }
-
-    public PinDefinition.Side getSide() {
-        return side;
-    }
-
     public boolean isLinked() {
         return linked;
     }
 
     public void setLinked(boolean linked) {
         this.linked = linked;
-    }
-
-    public Var getVar() {
-        return var;
-    }
-
-    public void setIndex(int index) {
-        this.index = index;
     }
 
     public int getIndex() {

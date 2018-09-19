@@ -20,7 +20,7 @@ public class Generator {
     private final String TAB = "    ";
     private final Logger LOGGER = LoggerFactory.getLogger(Generator.class);
 
-    private String outputFilePath = "C:\\Users\\Harris\\Desktop\\gen\\gen.ino";
+    private String outputFilePath = "C:\\Users\\family\\Desktop\\gen\\gen.ino";
     private PrintWriter writer = null;
 
     /*
@@ -97,7 +97,7 @@ public class Generator {
         blocks = new ArrayList<>();
         links = new ArrayList<>();
 
-        for (Element e : program.getElements()) {
+        for (Element e : program.elements) {
             switch (e.eid) {
                 case Link.EID:
                     Link l = (Link)e;
@@ -162,7 +162,7 @@ public class Generator {
             puts(TAB + "// pins");
 
             for (Pin p : b.getPins()) {
-                statement(TAB + typeStringMap.get(p.getVar().getType()) + " *p" + p.getIndex());
+                statement(TAB + typeStringMap.get(p.var.getType()) + " *p" + p.getIndex());
             }
 
             puts(TAB + "// variables");
@@ -202,7 +202,7 @@ public class Generator {
 
     private void generateVariables() {
         for (Link l : links) {
-            statement(typeStringMap.get(l.getSource().getVar().getType()) + " l" + l.uid);
+            statement(typeStringMap.get(l.getSource().var.getType()) + " l" + l.uid);
         }
 
         nl();

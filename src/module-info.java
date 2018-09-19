@@ -5,5 +5,8 @@ open module studio {
     requires javafx.graphics;
     requires javafx.media;
 
+    requires gson;
+    requires java.sql;
+
     requires slf4j.api;
 }

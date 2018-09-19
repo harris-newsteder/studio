@@ -10,12 +10,12 @@ public class Rectangle extends Shape {
     /*
      * come on you know what this is
      */
-    private double width = 80.0;
+    public double width = 80.0;
 
     /*
      * this too
      */
-    private double height = 80.0;
+    public double height = 80.0;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTOR
@@ -44,7 +44,7 @@ public class Rectangle extends Shape {
     @Override
     public void stroke(GraphicsContext gc) {
         gc.save();
-        gc.translate(x - (width / 2), y - (height / 2));
+        gc.translate(-(width / 2), -(height / 2));
         gc.strokeRect(0, 0, width, height);
         gc.restore();
     }
@@ -52,34 +52,8 @@ public class Rectangle extends Shape {
     @Override
     public void fill(GraphicsContext gc) {
         gc.save();
-        gc.translate(x - (width / 2), y - (height / 2));
+        gc.translate(-(width / 2), -(height / 2));
         gc.fillRect(0, 0, width, height);
         gc.restore();
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // GETTERS & SETTERS
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-    public void setWidth(double width) {
-        this.width = width;
-    }
-
-    public double getWidth() {
-        return width;
-    }
-
-    public void setHeight(double height) {
-        this.height = height;
-    }
-
-    public double getHeight() {
-        return height;
-    }
-
-    public void setPosition(double x, double y) {
-        this.x = x;
-        this.y = y;
     }
 }

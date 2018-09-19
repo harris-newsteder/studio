@@ -2,18 +2,16 @@ package studio.program;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import studio.program.dictionary.BlockDictionary;
-import studio.program.dictionary.def.AnalogInput;
-import studio.program.dictionary.def.And;
-import studio.program.dictionary.def.Not;
 import studio.program.element.*;
+import studio.program.element.block.BAnalogInput;
+import studio.program.element.block.BAnd;
 import studio.program.ui.UI;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
 public class Program {
-    private ArrayList<Element> elements = null;
+    public ArrayList<Element> elements = null;
 
     private UI ui = null;
 
@@ -23,7 +21,7 @@ public class Program {
         ui = new UI(this, canvas);
 
         // TODO: remove
-        Block b = new Block(BlockDictionary.lookup(Not.NAME));
+        Block b = new BAnd();
         addElement(b);
         b.createPins(this);
     }
@@ -52,9 +50,5 @@ public class Program {
 
     public void addElement(Element element) {
         elements.add(element);
-    }
-
-    public ArrayList<Element> getElements() {
-        return elements;
     }
 }

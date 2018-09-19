@@ -91,7 +91,7 @@ public class View {
         gc.setTextAlign(TextAlignment.CENTER);
         gc.setTextBaseline(VPos.CENTER);
 
-        for (Element e : program.getElements()) {
+        for (Element e : program.elements) {
             e.draw(gc);
         }
 

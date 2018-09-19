@@ -95,7 +95,7 @@ public class InteractionManager {
         this.program = program;
         this.view = view;
         this.cursor = new Cursor();
-        this.collider = new Collider(cursor, program.getElements());
+        this.collider = new Collider(cursor, program.elements);
 
         generator = new Generator();
 

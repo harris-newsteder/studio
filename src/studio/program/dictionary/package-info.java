@@ -1,5 +1,0 @@
-/*
- *
- */
-
-package studio.program.dictionary;

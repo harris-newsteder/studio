@@ -39,7 +39,7 @@ public class Circle extends Shape {
     @Override
     public void stroke(GraphicsContext gc) {
         gc.save();
-        gc.translate(x - radius, y - radius);
+        gc.translate(-radius, -radius);
         gc.strokeOval(0, 0, radius * 2, radius * 2);
         gc.restore();
     }
@@ -47,7 +47,7 @@ public class Circle extends Shape {
     @Override
     public void fill(GraphicsContext gc) {
         gc.save();
-        gc.translate(x - radius, y - radius);
+        gc.translate(-radius, -radius);
         gc.fillOval(0, 0, radius * 2, radius * 2);
         gc.restore();
     }
