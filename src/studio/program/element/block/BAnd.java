@@ -17,7 +17,7 @@ public class BAnd extends Block {
         super(NAME);
 
         path = new Path();
-        path.content = "M -40 -40 l 40 0 c 50 0 50 80 0 80 l -40 0 l 0 -80";
+        path.content = "M -40 -40 l 40 0 c 53 0 53 80 0 80 l -40 0 l 0 -80";
 
         shape = path;
     }

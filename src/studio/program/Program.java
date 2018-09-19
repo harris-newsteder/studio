@@ -5,6 +5,8 @@ import javafx.scene.canvas.GraphicsContext;
 import studio.program.element.*;
 import studio.program.element.block.BAnalogInput;
 import studio.program.element.block.BAnd;
+import studio.program.element.block.BNot;
+import studio.program.element.block.BOr;
 import studio.program.ui.UI;
 
 import java.util.ArrayList;
@@ -21,7 +23,11 @@ public class Program {
         ui = new UI(this, canvas);
 
         // TODO: remove
-        Block b = new BAnd();
+        Block b = new BNot();
+        addElement(b);
+        b.createPins(this);
+
+        b = new BAnd();
         addElement(b);
         b.createPins(this);
     }

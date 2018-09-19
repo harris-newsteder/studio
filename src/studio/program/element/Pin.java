@@ -26,6 +26,14 @@ public class Pin extends Element {
         LEFT
     }
 
+    private static final double[] xs = new double[] {
+        5, 0, -5, 0
+    };
+
+    private static final double[] ys = new double[] {
+        LENGTH - 7, LENGTH, LENGTH - 7, LENGTH - 5
+    };
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // VARIABLES
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -135,8 +143,13 @@ public class Pin extends Element {
 
         // TODO: use a triangle instead of stroke line
         if (flow == Flow.INPUT) {
-            gc.strokeLine(0, LENGTH - 1.8, 3, LENGTH - 5);
-            gc.strokeLine(0, LENGTH - 1.8, -3, LENGTH - 5);
+            gc.save();
+            gc.setFill(View.COLOR_DARK);
+            gc.beginPath();
+            gc.appendSVGPath("M 0 " + LENGTH + " l 5 -7 l -10 0 l 5 7");
+            gc.fill();
+            gc.closePath();
+            gc.restore();
         }
 
         if (!linked) {
