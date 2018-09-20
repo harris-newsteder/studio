@@ -5,6 +5,7 @@ import javafx.scene.paint.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import studio.program.ui.shape.Polyline;
+import studio.program.ui.shape.Shape;
 
 import java.util.ArrayList;
 
@@ -31,6 +32,11 @@ public class Link extends Element {
      */
     private ArrayList<Pin> sinks = null;
 
+    /*
+     *
+     */
+    public Polyline polyline = null;
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTOR
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -39,7 +45,8 @@ public class Link extends Element {
         super(EID);
 
         sinks = new ArrayList<>();
-        shape = new Polyline();
+        polyline = new Polyline();
+        shape = polyline;
     }
 
     @Override
@@ -50,7 +57,7 @@ public class Link extends Element {
     public void draw(GraphicsContext gc) {
         gc.save();
         if (hover) gc.setStroke(Color.RED);
-        shape.stroke(gc);
+        polyline.stroke(gc);
         gc.restore();
     }
 

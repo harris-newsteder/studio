@@ -3,10 +3,7 @@ package studio.program;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import studio.program.element.*;
-import studio.program.element.block.BAnalogInput;
-import studio.program.element.block.BAnd;
-import studio.program.element.block.BNot;
-import studio.program.element.block.BOr;
+import studio.program.element.block.*;
 import studio.program.ui.UI;
 
 import java.util.ArrayList;
@@ -23,13 +20,24 @@ public class Program {
         ui = new UI(this, canvas);
 
         // TODO: remove
-        Block b = new BNot();
-        addElement(b);
+
+        Block b;
+
+        b = new BNot();
         b.createPins(this);
+        addElement(b);
 
         b = new BAnd();
-        addElement(b);
         b.createPins(this);
+        addElement(b);
+
+        b = new BDiscreteInput();
+        b.createPins(this);
+        addElement(b);
+
+        b = new BDiscreteOutput();
+        b.createPins(this);
+        addElement(b);
     }
 
     public void tick(double dt) {

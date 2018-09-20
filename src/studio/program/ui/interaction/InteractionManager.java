@@ -1,5 +1,6 @@
 package studio.program.ui.interaction;
 
+import com.google.gson.Gson;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.*;
@@ -203,6 +204,8 @@ public class InteractionManager {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                break;
+            case S:
                 break;
         }
 

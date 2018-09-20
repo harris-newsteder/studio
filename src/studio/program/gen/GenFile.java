@@ -15,7 +15,7 @@ public class GenFile {
         init = new ArrayList<>();
         fn = new ArrayList<>();
 
-        File file = new File("src/gen/" + blockName + ".gen");
+        File file = new File("src/res/blocks/" + blockName + ".gen");
         BufferedReader br = new BufferedReader(new FileReader(file));
         String line = "";
 

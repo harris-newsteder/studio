@@ -11,7 +11,7 @@ import studio.program.ui.view.View;
 public class BNot extends Block {
     public static final String NAME = "not";
 
-    private Path path = null;
+    public Path path = null;
 
     public BNot() {
         super(NAME);
@@ -50,10 +50,10 @@ public class BNot extends Block {
     @Override
     public void draw(GraphicsContext gc) {
         gc.save();
-        gc.translate(shape.x, shape.y);
+        gc.translate(path.x, path.y);
 
-        shape.fill(gc);
-        shape.stroke(gc);
+        path.fill(gc);
+        path.stroke(gc);
 
         double r = 4;
 
@@ -65,7 +65,7 @@ public class BNot extends Block {
 
         if (hover) {
             gc.setFill(View.COLOR_HOVER_MASK);
-            shape.fill(gc);
+            path.fill(gc);
         }
 
         gc.restore();

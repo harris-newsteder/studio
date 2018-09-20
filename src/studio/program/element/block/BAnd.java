@@ -6,19 +6,19 @@ import studio.program.Var;
 import studio.program.element.Block;
 import studio.program.element.Pin;
 import studio.program.ui.shape.Path;
+import studio.program.ui.shape.Shape;
 import studio.program.ui.view.View;
 
 public class BAnd extends Block {
     public static final String NAME = "and";
 
-    private Path path;
+    private Path path = null;
 
     public BAnd() {
         super(NAME);
 
         path = new Path();
         path.content = "M -40 -40 l 40 0 c 53 0 53 80 0 80 l -40 0 l 0 -80";
-
         shape = path;
     }
 

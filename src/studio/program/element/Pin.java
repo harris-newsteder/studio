@@ -3,6 +3,7 @@ package studio.program.element;
 import javafx.scene.canvas.GraphicsContext;
 import studio.program.ui.shape.Circle;
 import studio.program.Var;
+import studio.program.ui.shape.Shape;
 import studio.program.ui.view.View;
 
 public class Pin extends Element {
@@ -80,6 +81,11 @@ public class Pin extends Element {
      */
     public int index = -1;
 
+    /*
+     *
+     */
+    public Circle circle = null;
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTOR
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -88,8 +94,10 @@ public class Pin extends Element {
         super(EID);
         this.parent = parent;
 
-        shape = new Circle();
-        ((Circle)shape).radius = 6;
+        circle = new Circle();
+        ((Circle)circle).radius = 6;
+
+        shape = circle;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -122,15 +130,15 @@ public class Pin extends Element {
                 break;
         }
 
-        shape.x = x;
-        shape.y = y;
+        circle.x = x;
+        circle.y = y;
     }
 
     @Override
     public void draw(GraphicsContext gc) {
         gc.save();
 
-        gc.translate(shape.x, shape.y);
+        gc.translate(circle.x, circle.y);
 
         switch (side) {
             case TOP: gc.rotate(0); break;
@@ -153,11 +161,11 @@ public class Pin extends Element {
         }
 
         if (!linked) {
-            shape.fill(gc);
-            shape.stroke(gc);
+            circle.fill(gc);
+            circle.stroke(gc);
             if (hover) {
                 gc.setFill(View.COLOR_HOVER_MASK);
-                shape.fill(gc);
+                circle.fill(gc);
             }
         }
 

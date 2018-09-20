@@ -1,0 +1,21 @@
+{
+  "name": "and",
+
+  "vars": [
+  ],
+
+  "pins": [
+    {
+      "index": 0,
+      "type": "discrete_signal"
+    },
+    {
+      "index": 1,
+      "type": "discrete_signal"
+    },
+    {
+      "index": 2,
+      "type": "discrete_signal"
+    }
+  ]
+}
