@@ -4,8 +4,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 
-public class INone extends Interaction {
-    public INone(InteractionManager manager, Cursor cursor) {
+public class IBlockPlace extends Interaction {
+    public IBlockPlace(InteractionManager manager, Cursor cursor) {
         super(manager, cursor);
     }
 

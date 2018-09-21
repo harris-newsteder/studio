@@ -5,6 +5,7 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.ComboBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
@@ -23,8 +24,6 @@ public class MainController implements Initializable {
 
     private Canvas canvas = null;
     private Program program = null;
-    private View view = null;
-    private InteractionManager interactionManager = null;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

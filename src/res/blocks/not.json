@@ -1,16 +1,17 @@
 {
-  "name": "discrete_input",
+  "name": "not",
 
   "vars": [
-    {
-      "name": "input_pin",
-      "type": "u8"
-    }
   ],
 
   "pins": [
     {
       "index": 0,
+      "type": "discrete_signal",
+      "flow": "input"
+    },
+    {
+      "index": 1,
       "type": "discrete_signal",
       "flow": "output"
     },

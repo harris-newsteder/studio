@@ -12,7 +12,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         Global.running = true;
 
-        BlockDictionary.populate();
+        BlockDictionary.init();
 
         Parent root = FXMLLoader.load(getClass().getResource("/res/main.fxml"));
 

@@ -1,5 +1,5 @@
 {
-  "name": "and",
+  "name": "compare",
 
   "vars": [
   ],
@@ -7,12 +7,12 @@
   "pins": [
     {
       "index": 0,
-      "type": "discrete_signal",
+      "type": "number",
       "flow": "input"
     },
     {
       "index": 1,
-      "type": "discrete_signal",
+      "type": "number",
       "flow": "input"
     },
     {

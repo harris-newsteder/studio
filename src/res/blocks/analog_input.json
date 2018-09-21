@@ -1,5 +1,5 @@
 {
-  "name": "discrete_input",
+  "name": "analog_input",
 
   "vars": [
     {
@@ -11,7 +11,7 @@
   "pins": [
     {
       "index": 0,
-      "type": "discrete_signal",
+      "type": "analog_signal",
       "flow": "output"
     },
   ]

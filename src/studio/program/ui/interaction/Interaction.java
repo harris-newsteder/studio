@@ -1,5 +1,6 @@
 package studio.program.ui.interaction;
 
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 
@@ -22,6 +23,7 @@ public abstract class Interaction {
         this.cursor = cursor;
     }
 
+    public abstract void draw(GraphicsContext gc);
     public abstract void onMouseMoved(MouseEvent event);
     public abstract void onMousePressed(MouseEvent event);
     public abstract void onMouseReleased(MouseEvent event);

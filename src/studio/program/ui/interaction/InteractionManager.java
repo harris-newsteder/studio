@@ -20,7 +20,8 @@ public class InteractionManager {
 
     public enum InteractionType {
         NONE,
-        CAMERA
+        CAMERA,
+        BLOCK_PLACE,
     };
 
     public enum ToolType {
@@ -103,6 +104,7 @@ public class InteractionManager {
         interactions = new EnumMap<InteractionType, Interaction>(InteractionType.class);
         interactions.put(InteractionType.NONE,       new INone(this, cursor));
         interactions.put(InteractionType.CAMERA,     new ICamera(this, cursor));
+        interactions.put(InteractionType.BLOCK_PLACE, new IBlockPlace(this, cursor));
 
         tools = new EnumMap<ToolType, Tool>(ToolType.class);
         tools.put(ToolType.GROUP, new TGroup(this));
@@ -152,6 +154,9 @@ public class InteractionManager {
         ((Canvas)event.getSource()).requestFocus();
 
         switch (event.getButton()) {
+            case PRIMARY:
+
+                break;
             case MIDDLE:
                 currentInteraction = InteractionType.CAMERA;
                 break;
@@ -171,6 +176,10 @@ public class InteractionManager {
 
     private void onMouseClicked(MouseEvent event) {
         tools.get(currentTool).onMouseClicked(event);
+
+        if (hover == null) {
+            currentInteraction = InteractionType.BLOCK_PLACE;
+        }
     }
 
     private void onMouseDragged(MouseEvent event) {

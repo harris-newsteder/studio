@@ -10,4 +10,9 @@ public class PinDefinition {
      *
      */
     public String type;
+
+    /*
+     *
+     */
+    public String flow;
 }

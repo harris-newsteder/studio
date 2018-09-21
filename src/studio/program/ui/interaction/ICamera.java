@@ -1,5 +1,6 @@
 package studio.program.ui.interaction;
 
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import studio.program.ui.view.Camera;
@@ -18,6 +19,11 @@ public class ICamera extends Interaction {
     public ICamera(InteractionManager manager, Cursor cursor) {
         super(manager, cursor);
         camera = manager.getView().getCamera();
+    }
+
+    @Override
+    public void draw(GraphicsContext gc) {
+
     }
 
     @Override

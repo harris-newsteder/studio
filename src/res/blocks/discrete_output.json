@@ -1,0 +1,14 @@
+{
+  "name": "discrete_output",
+
+  "vars": [
+  ],
+
+  "pins": [
+    {
+      "index": 0,
+      "type": "discrete_signal",
+      "flow": "input"
+    },
+  ]
+}
