@@ -1,7 +1,0 @@
-#init
-
-
-
-#fn
-
-$PIN(0) = analogRead($VAR(input_pin));

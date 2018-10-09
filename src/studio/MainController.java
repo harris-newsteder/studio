@@ -5,30 +5,37 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.ComboBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.SVGPath;
-import javafx.scene.shape.Shape;
-import studio.program.ui.interaction.InteractionManager;
 import studio.program.Program;
-import studio.program.ui.view.View;
+import studio.ui.UI;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
-
     @FXML
     Pane centerPane;
 
+    /*
+     *
+     */
     private Canvas canvas = null;
+
+    /*
+     *
+     */
     private Program program = null;
+
+    /*
+     *
+     */
+    private UI ui = null;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         canvas = new Canvas();
-        program = new Program(canvas);
+        program = new Program();
+        ui = new UI(program, canvas);
 
         centerPane.getChildren().add(canvas);
 
@@ -41,6 +48,7 @@ public class MainController implements Initializable {
                 while (Global.running) {
                     // TODO: delta time calculation
                     program.tick(0.0);
+                    ui.tick(0.0);
                     Thread.sleep(0, 500000);
                 }
                 return null;
@@ -52,7 +60,7 @@ public class MainController implements Initializable {
         AnimationTimer drawTask = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                program.draw(canvas.getGraphicsContext2D());
+                ui.draw(canvas.getGraphicsContext2D());
             }
         };
         drawTask.start();

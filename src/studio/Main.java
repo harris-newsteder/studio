@@ -5,14 +5,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import studio.program.dictionary.BlockDictionary;
+import studio.blocklib.BlockLibrary;
 
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         Global.running = true;
 
-        BlockDictionary.init();
+        BlockLibrary.init();
 
         Parent root = FXMLLoader.load(getClass().getResource("/res/main.fxml"));
 

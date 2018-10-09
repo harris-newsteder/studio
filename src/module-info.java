@@ -9,4 +9,5 @@ open module studio {
     requires gson;
 
     requires slf4j.api;
+    requires kotlin.stdlib;
 }
