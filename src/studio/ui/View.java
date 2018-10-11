@@ -41,7 +41,7 @@ public final class View {
     /*
      *
      */
-    public ActionManager actionManager = null;
+    public InteractionManager interactionManager = null;
 
     /*
      *
@@ -56,7 +56,7 @@ public final class View {
         this.ui = ui;
 
         program = ui.getProgram();
-        actionManager = ui.getActionManager();
+        interactionManager = ui.getInteractionManager();
         camera = new Camera();
     }
 
@@ -101,7 +101,7 @@ public final class View {
             e.draw(gc);
         }
 
-        actionManager.draw(gc);
+        interactionManager.draw(gc);
 
         gc.restore();
     }

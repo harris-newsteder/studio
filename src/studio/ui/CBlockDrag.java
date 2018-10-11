@@ -3,7 +3,7 @@ package studio.ui;
 import javafx.scene.input.MouseEvent;
 import studio.program.Block;
 
-public class ABlockDrag extends Action {
+public final class CBlockDrag extends Command {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // VARIABLES
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -35,7 +35,7 @@ public class ABlockDrag extends Action {
     // CONSTRUCTOR
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public ABlockDrag(ActionManager manager) {
+    public CBlockDrag(InteractionManager manager) {
         super(manager);
     }
 
@@ -66,7 +66,6 @@ public class ABlockDrag extends Action {
 
     @Override
     public void onMouseDragged(MouseEvent event) {
-
         int nx = mouse.getViewX() - dox;
         int ny = mouse.getViewY() - doy;
 

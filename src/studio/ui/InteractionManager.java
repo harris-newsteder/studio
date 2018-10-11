@@ -9,17 +9,10 @@ import studio.program.Program;
 
 import java.util.ArrayList;
 
-public class ActionManager {
+public final class InteractionManager {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTANTS
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    enum ActionType {
-        NONE,
-        BLOCK_DRAG,
-        LINK_DRAG,
-        LINK,
-    }
 
     private final KeyCombination KC_UNDO = new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN);
     private final KeyCombination KC_REDO = new KeyCodeCombination(KeyCode.Y, KeyCombination.CONTROL_DOWN);
@@ -67,7 +60,7 @@ public class ActionManager {
     /*
      *
      */
-    private ArrayList<Action> actionTimeline = null;
+    private ArrayList<Command> commandTimeline = null;
 
     /*
      *
@@ -77,27 +70,30 @@ public class ActionManager {
     /*
      *
      */
-    private ArrayList<Action> specialActions = null;
+    private ArrayList<Action> actions = null;
 
     /*
      *
      */
-    private Action activeAction = null;
+    private Command activeCommand = null;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTOR
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public ActionManager(UI ui) {
+    public InteractionManager(UI ui) {
+        this.ui = ui;
         program = ui.getProgram();
         canvas = ui.getCanvas();
         camera = ui.getView().getCamera();
         mouse = new Mouse();
         collider = new Collider(this);
-        actionTimeline = new ArrayList<>();
-        specialActions = new ArrayList<>();
+        commandTimeline = new ArrayList<>();
 
-        registerCanvasEvents(canvas);
+        actions = new ArrayList<>();
+        actions.add(new AMoveCamera(this));
+
+        registerEvents(canvas);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -105,19 +101,31 @@ public class ActionManager {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     void tick(double dt) {
+        for (Action a : actions) {
+            a.tick(dt);
+        }
 
         // the current action is finished, add it to the actionTimeline and increment the timeline position
-        if (activeAction != null) {
-            if (activeAction.isFinished()) {
-                actionTimeline.add(activeAction);
+        if (activeCommand != null) {
+
+            activeCommand.tick(dt);
+
+            if (activeCommand.isFinished()) {
+                commandTimeline.add(activeCommand);
                 timelinePosition++;
-                activeAction = null;
+                activeCommand = null;
             }
         }
     }
 
     void draw(GraphicsContext gc) {
+        for (Action a : actions) {
+            a.draw(gc);
+        }
 
+        if (activeCommand != null) {
+            activeCommand.draw(gc);
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -127,8 +135,12 @@ public class ActionManager {
     private void onMouseMoved(MouseEvent event) {
         updateMouse((int)event.getX(), (int)event.getY());
 
-        if (activeAction != null) {
-            activeAction.onMouseMoved(event);
+        for (Action a : actions) {
+            a.onMouseMoved(event);
+        }
+
+        if (activeCommand != null) {
+            activeCommand.onMouseMoved(event);
             return;
         }
 
@@ -138,22 +150,35 @@ public class ActionManager {
     private void onMousePressed(MouseEvent event) {
         // ~_~
         canvas.requestFocus();
-        if (activeAction != null) {
-            activeAction.onMousePressed(event);
+
+        for (Action a : actions) {
+            a.onMousePressed(event);
+        }
+
+        if (activeCommand != null) {
+            activeCommand.onMousePressed(event);
             return;
         }
     }
 
     private void onMouseReleased(MouseEvent event) {
-        if (activeAction != null) {
-            activeAction.onMouseReleased(event);
+        for (Action a : actions) {
+            a.onMouseReleased(event);
+        }
+
+        if (activeCommand != null) {
+            activeCommand.onMouseReleased(event);
             return;
         }
     }
 
     private void onMouseClicked(MouseEvent event) {
-        if (activeAction != null) {
-            activeAction.onMouseClicked(event);
+        for (Action a : actions) {
+            a.onMouseClicked(event);
+        }
+
+        if (activeCommand != null) {
+            activeCommand.onMouseClicked(event);
             return;
         }
     }
@@ -161,8 +186,12 @@ public class ActionManager {
     private void onMouseDragged(MouseEvent event) {
         updateMouse((int)event.getX(), (int)event.getY());
 
-        if (activeAction != null) {
-            activeAction.onMouseDragged(event);
+        for (Action a : actions) {
+            a.onMouseDragged(event);
+        }
+
+        if (activeCommand != null) {
+            activeCommand.onMouseDragged(event);
             return;
         }
 
@@ -172,7 +201,7 @@ public class ActionManager {
             } else {
                 switch (hover.getEID()) {
                     case Block.EID:
-                        activate(new ABlockDrag(this));
+                        activate(new CBlockDrag(this));
                         break;
                 }
             }
@@ -185,42 +214,58 @@ public class ActionManager {
             if (timelinePosition == 0) return;
 
             //
-            actionTimeline.get(timelinePosition - 1).undo();
+            commandTimeline.get(timelinePosition - 1).undo();
             timelinePosition--;
         }
 
         if (KC_REDO.match(event)) {
             // at the front of the timeline, can't redo any more
-            if (timelinePosition == actionTimeline.size()) return;
+            if (timelinePosition == commandTimeline.size()) return;
 
             //
-            actionTimeline.get(timelinePosition).redo();
+            commandTimeline.get(timelinePosition).redo();
             timelinePosition++;
         }
 
-        if (activeAction != null) {
-            activeAction.onKeyPressed(event);
+        for (Action a : actions) {
+            a.onKeyPressed(event);
+        }
+
+        if (activeCommand != null) {
+            activeCommand.onKeyPressed(event);
             return;
         }
     }
 
     private void onKeyReleased(KeyEvent event) {
-        if (activeAction != null) {
-            activeAction.onKeyReleased(event);
+        for (Action a : actions) {
+            a.onKeyReleased(event);
+        }
+
+        if (activeCommand != null) {
+            activeCommand.onKeyReleased(event);
             return;
         }
     }
 
     private void onKeyTyped(KeyEvent event) {
-        if (activeAction != null) {
-            activeAction.onKeyReleased(event);
+        for (Action a : actions) {
+            a.onKeyTyped(event);
+        }
+
+        if (activeCommand != null) {
+            activeCommand.onKeyReleased(event);
             return;
         }
     }
 
     private void onScroll(ScrollEvent event) {
-        if (activeAction != null) {
-            activeAction.onScroll(event);
+        for (Action a : actions) {
+            a.onScroll(event);
+        }
+
+        if (activeCommand != null) {
+            activeCommand.onScroll(event);
             return;
         }
     }
@@ -228,17 +273,17 @@ public class ActionManager {
     /*
      *
      */
-    private void activate(Action action) {
+    private void activate(Command action) {
         // we are starting a new action somewhere in the timeline's history, we need to clear all action after where
         // we currently are in the timeline
-        if (timelinePosition != actionTimeline.size()) {
-            for (int i = actionTimeline.size(); i > timelinePosition; --i) {
-                actionTimeline.remove(i - 1);
+        if (timelinePosition != commandTimeline.size()) {
+            for (int i = commandTimeline.size(); i > timelinePosition; --i) {
+                commandTimeline.remove(i - 1);
             }
         }
 
-        activeAction = action;
-        activeAction.onActivate();
+        activeCommand = action;
+        activeCommand.onActivate();
     }
 
     /*
@@ -269,7 +314,7 @@ public class ActionManager {
     /*
      *
      */
-    private void registerCanvasEvents(Canvas canvas) {
+    private void registerEvents(Canvas canvas) {
         this.canvas = canvas;
 
         canvas.setOnMouseMoved(   event -> {onMouseMoved(event);});
@@ -297,5 +342,9 @@ public class ActionManager {
 
     public Mouse getMouse() {
         return mouse;
+    }
+
+    public UI getUI() {
+        return ui;
     }
 }

@@ -27,7 +27,7 @@ public final class UI {
     /*
      *
      */
-    private ActionManager actionManager = null;
+    private InteractionManager interactionManager = null;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTOR
@@ -38,9 +38,9 @@ public final class UI {
         this.canvas = canvas;
 
         view = new View(this);
-        actionManager = new ActionManager(this);
+        interactionManager = new InteractionManager(this);
 
-        view.actionManager = actionManager;
+        view.interactionManager = interactionManager;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -51,8 +51,8 @@ public final class UI {
         return canvas;
     }
 
-    public ActionManager getActionManager() {
-        return actionManager;
+    public InteractionManager getInteractionManager() {
+        return interactionManager;
     }
 
     public Program getProgram() {
@@ -64,7 +64,7 @@ public final class UI {
     }
 
     public void tick(double dt) {
-        actionManager.tick(dt);
+        interactionManager.tick(dt);
     }
 
     public void draw(GraphicsContext gc) {
