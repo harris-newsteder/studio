@@ -2,7 +2,9 @@ package studio.program;
 
 import javafx.scene.canvas.GraphicsContext;
 
-public class LinkSection {
+import java.util.ArrayList;
+
+public class Section {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTANTS
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -12,24 +14,28 @@ public class LinkSection {
         VERTICAL
     }
 
-    public static final int INTERACTION_DISTANCE = 2;
+    public static final int INTERACTION_DISTANCE = 3;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // VARIABLES
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public LinkTerminal a = null;
-    public LinkTerminal b = null;
+    public Terminal a = null;
+    public Terminal b = null;
 
-    public LinkSection.Orientation orientation;
+    public ArrayList<Terminal> junctions;
+
+    public Section.Orientation orientation;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTOR
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public LinkSection() {
-        a = new LinkTerminal(this);
-        b = new LinkTerminal(this);
+    public Section() {
+        a = new Terminal(this);
+        b = new Terminal(this);
+
+        junctions = new ArrayList<>();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -45,14 +51,14 @@ public class LinkSection {
     }
 
     public boolean hitTest(int x, int y) {
-        if (orientation == LinkSection.Orientation.HORIZONTAL) {
+        if (orientation == Section.Orientation.HORIZONTAL) {
             if (Math.abs(y - a.y) > INTERACTION_DISTANCE) return false;
             if (x < Math.min(a.x, b.x)) return false;
             if (x > Math.max(a.x, b.x)) return false;
             return true;
         }
 
-        if (orientation == LinkSection.Orientation.VERTICAL) {
+        if (orientation == Section.Orientation.VERTICAL) {
             if (Math.abs(x - a.x) > INTERACTION_DISTANCE) return false;
             if (y < Math.min(a.y, b.y)) return false;
             if (y > Math.max(a.y, b.y)) return false;
@@ -60,33 +66,5 @@ public class LinkSection {
         }
 
         return false;
-    }
-
-    public void moveY(int y) {
-        this.a.y = y;
-
-        if (a.next != null) {
-            a.next.y = y;
-        }
-
-        this.b.y = y;
-
-        if (b.next != null) {
-            b.next.y = y;
-        }
-    }
-
-    public void moveX(int x) {
-        this.a.x = x;
-
-        if (a.next != null) {
-            a.next.x = x;
-        }
-
-        this.b.x = x;
-
-        if (b.next != null) {
-            b.next.x = x;
-        }
     }
 }

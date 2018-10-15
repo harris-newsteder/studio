@@ -26,11 +26,6 @@ public final class Link extends Element {
     public Pin source = null;
 
     /*
-     *
-     */
-    public Variable.Type type = Variable.Type.UNSET;
-
-    /*
      * however, that source may be routed to multiple signal "sinks"
      */
     public ArrayList<Pin> sinks = null;
@@ -38,12 +33,17 @@ public final class Link extends Element {
     /*
      *
      */
-    public ArrayList<LinkSection> sections = null;
+    public Variable.Type type = Variable.Type.UNSET;
 
     /*
      *
      */
-    public LinkSection hitSection = null;
+    public ArrayList<Section> sections = null;
+
+    /*
+     *
+     */
+    public Section hitSection = null;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTOR
@@ -66,7 +66,7 @@ public final class Link extends Element {
         if (hover) {
             gc.setStroke(Color.RED);
         }
-        for (LinkSection ls : sections) {
+        for (Section ls : sections) {
             ls.stroke(gc);
         }
         gc.restore();
@@ -75,18 +75,21 @@ public final class Link extends Element {
     @Override
     public boolean hitTest(int x, int y) {
         hitSection = null;
-        for (LinkSection ls : sections) {
-            if (ls.hitTest(x, y)) {
-                hitSection = ls;
+        for (Section s : sections) {
+            if (s.hitTest(x, y)) {
+                hitSection = s;
                 return true;
             }
         }
         return false;
     }
 
+    /*
+     * TODO: remove this logic from this class
+     */
     public boolean addPin(Pin pin) {
         if (type != Variable.Type.UNSET) {
-            if (type != pin.variable.type) {
+            if (type != pin.var.type) {
                 LOGGER.error("ATTEMPTED TO ADD PIN WITH INCOMPATIBLE VARIABLE TYPE");
                 return false;
             }
@@ -98,7 +101,7 @@ public final class Link extends Element {
                 return false;
             } else {
                 source = pin;
-                type = pin.variable.type;
+                type = pin.var.type;
                 return true;
             }
         } else {
@@ -107,13 +110,13 @@ public final class Link extends Element {
                 return false;
             } else {
                 sinks.add(pin);
-                type = pin.variable.type;
+                type = pin.var.type;
                 return true;
             }
         }
     }
 
-    public void addSection(LinkSection section) {
+    public void addSection(Section section) {
         sections.add(section);
     }
 }

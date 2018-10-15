@@ -157,7 +157,7 @@ public class Generator {
             // generate all the variable for the block pins
             puts(TAB + "// pins");
             for (Pin p : b.pins) {
-                state(TAB + typeStringMap.get(p.variable.type) + " *p" + p.index);
+                state(TAB + typeStringMap.get(p.var.type) + " *p" + p.index);
             }
 
             // generate all the internal block variables

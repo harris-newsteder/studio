@@ -111,12 +111,12 @@ public final class Block extends Element {
         this.y = y;
 
         for (Pin pin : pins) {
-            pin.updatePosition();
+            pin.reposition();
         }
     }
 
     public void addPin(Pin pin) {
         pins.add(pin.index, pin);
-        pin.updatePosition();
+        pin.reposition();
     }
 }

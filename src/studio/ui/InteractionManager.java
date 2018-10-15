@@ -319,6 +319,10 @@ public final class InteractionManager {
                 (int)(camera.translateX + (x / camera.zoom)),
                 (int)(camera.translateY + (y / camera.zoom))
         );
+        mouse.setGridPosition(
+                (int)(Math.round(mouse.viewX / View.GRID_SIZE) * View.GRID_SIZE),
+                (int)(Math.round(mouse.viewY / View.GRID_SIZE) * View.GRID_SIZE)
+        );
     }
 
     /*

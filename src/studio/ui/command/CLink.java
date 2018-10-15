@@ -37,12 +37,12 @@ public final class CLink extends Command {
     /*
      *
      */
-    private LinkSection csec = null;
+    private Section csec = null;
 
     /*
      *
      */
-    private ArrayList<LinkSection> sections;
+    private ArrayList<Section> sections;
 
     /*
      *
@@ -80,7 +80,7 @@ public final class CLink extends Command {
 
         sections = new ArrayList<>();
 
-        csec = new LinkSection();
+        csec = new Section();
         csec.a.setPosition(
                 start.x,
                 start.y
@@ -89,7 +89,7 @@ public final class CLink extends Command {
                 start.x,
                 start.y
         );
-        csec.a.type = LinkTerminal.Type.ANCHOR;
+        csec.a.type = Terminal.Type.ANCHOR;
     }
 
     @Override
@@ -102,7 +102,7 @@ public final class CLink extends Command {
 
     @Override
     public void draw(GraphicsContext gc) {
-        for (LinkSection ls : sections) {
+        for (Section ls : sections) {
             ls.stroke(gc);
         }
         csec.stroke(gc);
@@ -134,20 +134,17 @@ public final class CLink extends Command {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void updateCurrentSection() {
-        int gx = (int)(Math.round(mouse.viewX / View.GRID_SIZE) * View.GRID_SIZE);
-        int gy = (int)(Math.round(mouse.viewY / View.GRID_SIZE) * View.GRID_SIZE);
-
-        int dx = Math.abs(gx - csec.a.x);
-        int dy = Math.abs(gy - csec.a.y);
+        int dx = Math.abs(mouse.gridX - csec.a.x);
+        int dy = Math.abs(mouse.gridY - csec.a.y);
 
         // more vertical than horizontal
         if (dy > dx) {
-            csec.b.setPosition(csec.a.x, gy);
-            csec.orientation = LinkSection.Orientation.VERTICAL;
+            csec.b.setPosition(csec.a.x, mouse.gridY);
+            csec.orientation = Section.Orientation.VERTICAL;
         // more horizontal than vertical
         } else {
-            csec.b.setPosition(gx, csec.a.y);
-            csec.orientation = LinkSection.Orientation.HORIZONTAL;
+            csec.b.setPosition(mouse.gridX, csec.a.y);
+            csec.orientation = Section.Orientation.HORIZONTAL;
         }
     }
 
@@ -166,7 +163,7 @@ public final class CLink extends Command {
                 ((Pin)oh).linked = false;
             }
 
-            csec.b.type = LinkTerminal.Type.CORNER;
+            csec.b.type = Terminal.Type.CORNER;
             oh.onExit();
         }
 
@@ -181,13 +178,13 @@ public final class CLink extends Command {
             }
 
             ((Pin)nh).linked = true;
-            csec.b.type = LinkTerminal.Type.ANCHOR;
+            csec.b.type = Terminal.Type.ANCHOR;
             end = nh;
             return;
         }
 
         if (nh.eid == Link.EID) {
-            csec.b.type = LinkTerminal.Type.JUNCTION;
+            csec.b.type = Terminal.Type.JUNCTION;
             end = nh;
             return;
         }
@@ -205,7 +202,7 @@ public final class CLink extends Command {
         }
 
         // new section
-        LinkSection nsec = new LinkSection();
+        Section nsec = new Section();
 
         nsec.a.setPosition(
                 csec.b.x,
@@ -217,7 +214,7 @@ public final class CLink extends Command {
                 csec.b.y
         );
 
-        nsec.a.type = LinkTerminal.Type.CORNER;
+        nsec.a.type = Terminal.Type.CORNER;
 
         nsec.a.next = csec.b;
         csec.b.next = nsec.a;
@@ -241,7 +238,7 @@ public final class CLink extends Command {
 
         link = new Link();
 
-        if (sp.variable.type != ep.variable.type) {
+        if (sp.var.type != ep.var.type) {
             LOGGER.warn("INCOMPATIBLE VARIABLE TYPES BETWEEN PINS");
             return;
         }
@@ -274,9 +271,12 @@ public final class CLink extends Command {
         if (l.addPin(start)) {
             start.link(l);
 
-            for (LinkSection s : sections) {
+            for (Section s : sections) {
                 l.addSection(s);
             }
+
+            // add csec.b terminal as a junction of the section we are linking to
+            l.hitSection.junctions.add(csec.b);
 
             finish();
         } else {

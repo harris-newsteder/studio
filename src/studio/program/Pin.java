@@ -70,7 +70,7 @@ public final class Pin extends Element {
     /*
      * the signal variable associated with this pin
      */
-    public Variable variable = null;
+    public Variable var = null;
 
     /*
      *
@@ -103,10 +103,6 @@ public final class Pin extends Element {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // PUBLIC FUNCTIONS
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static Pin create() {
-        return new Pin();
-    }
 
     @Override
     public void tick(double dt) {
@@ -155,7 +151,7 @@ public final class Pin extends Element {
         return body.hitTest(x - this.x, y - this.y);
     }
 
-    public void updatePosition() {
+    public void reposition() {
         x = parent.x;
         y = parent.y;
 
@@ -188,13 +184,17 @@ public final class Pin extends Element {
     // FLUENT FUNCTIONS
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    public static Pin create() {
+        return new Pin();
+    }
+
     public Pin withParent(Block parent) {
         this.parent = parent;
         return this;
     }
 
-    public Pin withVariable(Variable variable) {
-        this.variable = variable;
+    public Pin withVariable(Variable var) {
+        this.var = var;
         return this;
     }
 

@@ -3,7 +3,7 @@ package studio.program;
 import javafx.scene.canvas.GraphicsContext;
 import studio.ui.View;
 
-public class LinkTerminal {
+public class Terminal {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTANTS
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -21,12 +21,12 @@ public class LinkTerminal {
     /*
      *
      */
-    public LinkSection parent = null;
+    public Section parent = null;
 
     /*
      *
      */
-    public LinkTerminal.Type type = LinkTerminal.Type.CORNER;
+    public Terminal.Type type = Terminal.Type.CORNER;
 
     /*
      *
@@ -37,13 +37,13 @@ public class LinkTerminal {
     /*
      * if this terminal is a corner type, this variable will be the other terminal this is touching on the next section
      */
-    public LinkTerminal next = null;
+    public Terminal next = null;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTOR
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public LinkTerminal(LinkSection parent) {
+    public Terminal(Section parent) {
         this.parent = parent;
     }
 
@@ -56,10 +56,10 @@ public class LinkTerminal {
         gc.translate(x - 5, y - 5);
         switch (type) {
             case ANCHOR:
-                gc.setStroke(View.COLOR_DARK);
-                gc.strokeLine(0, 0, 10, 10);
-                gc.strokeLine(10, 0, 0, 10);
-                break;
+//                gc.setStroke(View.COLOR_DARK);
+//                gc.strokeLine(0, 0, 10, 10);
+//                gc.strokeLine(10, 0, 0, 10);
+//                break;
             case CORNER:
                 break;
             case JUNCTION:
@@ -74,8 +74,8 @@ public class LinkTerminal {
     // GETTERS & SETTERS
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public void setPosition(int x, int y) {
-        this.x = x;
-        this.y = y;
+    public void setPosition(int nx, int ny) {
+        x = nx;
+        y = ny;
     }
 }

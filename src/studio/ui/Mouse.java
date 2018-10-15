@@ -6,16 +6,22 @@ public final class Mouse {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /*
-     *
+     * the mouse's real position in the scene
      */
     public int realX = 0;
     public int realY = 0;
 
     /*
-     *
+     * the mouse's position in the view, the "world"
      */
     public int viewX = 0;
     public int viewY = 0;
+
+    /*
+     * the mouse's position snapped to the grid
+     */
+    public int gridX = 0;
+    public int gridY = 0;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTOR
@@ -37,5 +43,10 @@ public final class Mouse {
     public void setViewPosition(int viewX, int viewY) {
         this.viewX = viewX;
         this.viewY = viewY;
+    }
+
+    public void setGridPosition(int gridX, int gridY) {
+        this.gridX = gridX;
+        this.gridY = gridY;
     }
 }
