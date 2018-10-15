@@ -1,7 +1,9 @@
-package studio.ui;
+package studio.ui.command;
 
 import javafx.scene.input.MouseEvent;
 import studio.program.Block;
+import studio.ui.InteractionManager;
+import studio.ui.View;
 
 public final class CBlockDrag extends Command {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -45,40 +47,40 @@ public final class CBlockDrag extends Command {
 
     @Override
     public void onActivate() {
-        drag = (Block)manager.getHover();
+        drag = (Block)manager.hover;
 
-        originalX = drag.getBody().getX();
-        originalY = drag.getBody().getY();
+        originalX = drag.x;
+        originalY = drag.y;
 
-        dox = mouse.getViewX() - drag.getBody().getX();
-        doy = mouse.getViewY() - drag.getBody().getY();
+        dox = mouse.viewX - drag.x;
+        doy = mouse.viewY - drag.y;
     }
 
     @Override
     public void undo() {
-        drag.getBody().setPosition(originalX, originalY);
+        drag.moveTo(originalX, originalY);
     }
 
     @Override
     public void redo() {
-        drag.getBody().setPosition(finalX, finalY);
+        drag.moveTo(finalX, finalY);
     }
 
     @Override
     public void onMouseDragged(MouseEvent event) {
-        int nx = mouse.getViewX() - dox;
-        int ny = mouse.getViewY() - doy;
+        int nx = mouse.viewX - dox;
+        int ny = mouse.viewY - doy;
 
         int gx = (int)(Math.round(nx / View.GRID_SIZE) * View.GRID_SIZE);
         int gy = (int)(Math.round(ny / View.GRID_SIZE) * View.GRID_SIZE);
 
-        drag.getBody().setPosition(gx, gy);
+        drag.moveTo(gx, gy);
     }
 
     @Override
     public void onMouseReleased(MouseEvent event) {
-        finalX = drag.getBody().getX();
-        finalY = drag.getBody().getY();
+        finalX = drag.x;
+        finalY = drag.y;
 
         finish();
     }

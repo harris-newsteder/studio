@@ -1,11 +1,14 @@
-package studio.shape;
+package studio.program;
 
-public final class Terminal {
+import javafx.scene.canvas.GraphicsContext;
+import studio.ui.View;
+
+public class LinkTerminal {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTANTS
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    enum Type {
+    public enum Type {
         ANCHOR,
         CORNER,
         JUNCTION
@@ -18,44 +21,61 @@ public final class Terminal {
     /*
      *
      */
-    private Type type;
+    public LinkSection parent = null;
 
     /*
      *
      */
-    private int x;
-    private int y;
+    public LinkTerminal.Type type = LinkTerminal.Type.CORNER;
+
+    /*
+     *
+     */
+    public int x = 0;
+    public int y = 0;
 
     /*
      * if this terminal is a corner type, this variable will be the other terminal this is touching on the next section
      */
-    private Terminal next;
+    public LinkTerminal next = null;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTOR
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public Terminal() {
+    public LinkTerminal(LinkSection parent) {
+        this.parent = parent;
+    }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // PUBLIC FUNCTIONS
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void draw(GraphicsContext gc) {
+        gc.save();
+        gc.translate(x - 5, y - 5);
+        switch (type) {
+            case ANCHOR:
+                gc.setStroke(View.COLOR_DARK);
+                gc.strokeLine(0, 0, 10, 10);
+                gc.strokeLine(10, 0, 0, 10);
+                break;
+            case CORNER:
+                break;
+            case JUNCTION:
+                gc.setFill(View.COLOR_DARK);
+                gc.fillOval(0, 0, 10, 10);
+                break;
+        }
+        gc.restore();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // GETTERS & SETTERS
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public Type getType() {
-        return type;
-    }
-
-    public void setType(Type type) {
-        this.type = type;
+    public void setPosition(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
 }

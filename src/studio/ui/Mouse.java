@@ -8,14 +8,14 @@ public final class Mouse {
     /*
      *
      */
-    private int realX = 0;
-    private int realY = 0;
+    public int realX = 0;
+    public int realY = 0;
 
     /*
      *
      */
-    private int viewX = 0;
-    private int viewY = 0;
+    public int viewX = 0;
+    public int viewY = 0;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTOR
@@ -29,41 +29,9 @@ public final class Mouse {
     // GETTERS & SETTERS
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public int getRealX() {
-        return realX;
-    }
-
-    public void setRealX(int realX) {
-        this.realX = realX;
-    }
-
-    public int getRealY() {
-        return realY;
-    }
-
-    public void setRealY(int realY) {
-        this.realY = realY;
-    }
-
     public void setRealPosition(int realX, int realY) {
         this.realX = realX;
         this.realY = realY;
-    }
-
-    public int getViewX() {
-        return viewX;
-    }
-
-    public void setViewX(int viewX) {
-        this.viewX = viewX;
-    }
-
-    public int getViewY() {
-        return viewY;
-    }
-
-    public void setViewY(int viewY) {
-        this.viewY = viewY;
     }
 
     public void setViewPosition(int viewX, int viewY) {

@@ -6,7 +6,6 @@ open module studio {
     requires javafx.media;
 
     requires java.sql;
-    requires gson;
 
     requires slf4j.api;
     requires kotlin.stdlib;

@@ -12,22 +12,22 @@ public final class UI {
     /*
      *
      */
-    private Program program = null;
+    public Program program = null;
 
     /*
      *
      */
-    private Canvas canvas = null;
+    public Canvas canvas = null;
 
     /*
      *
      */
-    private View view = null;
+    public View view = null;
 
     /*
      *
      */
-    private InteractionManager interactionManager = null;
+    public InteractionManager interactionManager = null;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTOR
@@ -46,22 +46,6 @@ public final class UI {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // PUBLIC FUNCTIONS
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public Canvas getCanvas() {
-        return canvas;
-    }
-
-    public InteractionManager getInteractionManager() {
-        return interactionManager;
-    }
-
-    public Program getProgram() {
-        return program;
-    }
-
-    public View getView() {
-        return view;
-    }
 
     public void tick(double dt) {
         interactionManager.tick(dt);

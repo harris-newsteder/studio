@@ -43,7 +43,7 @@ class DiscreteInput : BlockDefinition() {
         ins.body = Circle()
         ins.symbol = "m -20 15 l 7 0 l 0 -30 l 26 0 l 0 30 l 7 0";
 
-        ins.pins.add(Pin.create()
+        ins.addPin(Pin.create()
                 .withParent(ins)
                 .withVariable(Variable(Variable.Type.DISCRETE_SIGNAL))
                 .atIndex(0)

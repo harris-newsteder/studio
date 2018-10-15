@@ -10,7 +10,7 @@ public final class Circle extends Shape {
     /*
      *
      */
-    private int radius = 40;
+    public int radius = 40;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTOR
@@ -25,9 +25,9 @@ public final class Circle extends Shape {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    public boolean containsPoint(int x, int y) {
-        double dx = Math.abs(x - this.x);
-        double dy = Math.abs(y - this.y);
+    public boolean hitTest(int lx, int ly) {
+        double dx = Math.abs(lx);
+        double dy = Math.abs(ly);
 
         if (dx > radius || dy > radius) return false;
         if (dx + dy <= radius) return true;
@@ -50,17 +50,5 @@ public final class Circle extends Shape {
         gc.translate(-radius, -radius);
         gc.fillOval(0, 0, radius * 2, radius * 2);
         gc.restore();
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // GETTERS & SETTERS
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public int getRadius() {
-        return radius;
-    }
-
-    public void setRadius(int radius) {
-        this.radius = radius;
     }
 }

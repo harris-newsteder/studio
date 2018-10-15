@@ -4,7 +4,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import studio.shape.Net;
 
 import java.util.ArrayList;
 
@@ -24,12 +23,27 @@ public final class Link extends Element {
     /*
      * a link may only have a single signal source
      */
-    private Pin source = null;
+    public Pin source = null;
+
+    /*
+     *
+     */
+    public Variable.Type type = Variable.Type.UNSET;
 
     /*
      * however, that source may be routed to multiple signal "sinks"
      */
-    private ArrayList<Pin> sinks = null;
+    public ArrayList<Pin> sinks = null;
+
+    /*
+     *
+     */
+    public ArrayList<LinkSection> sections = null;
+
+    /*
+     *
+     */
+    public LinkSection hitSection = null;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTOR
@@ -39,7 +53,7 @@ public final class Link extends Element {
         super(EID);
 
         sinks = new ArrayList<>();
-        body = new Net();
+        sections = new ArrayList<>();
     }
 
     @Override
@@ -49,28 +63,57 @@ public final class Link extends Element {
     @Override
     public void draw(GraphicsContext gc) {
         gc.save();
-        if (hover) gc.setStroke(Color.RED);
-        body.stroke(gc);
+        if (hover) {
+            gc.setStroke(Color.RED);
+        }
+        for (LinkSection ls : sections) {
+            ls.stroke(gc);
+        }
         gc.restore();
     }
 
-    public void setSource(Pin source) {
-        this.source = source;
-    }
-
-    public Pin getSource() {
-        return source;
-    }
-
-    public ArrayList<Pin> getSinks() {
-        return sinks;
-    }
-
-    public void addSink(Pin sink) {
-        if (sinks.contains(sink)) {
-            LOGGER.warn("attempting to add sink pin to link that is already added");
-            return;
+    @Override
+    public boolean hitTest(int x, int y) {
+        hitSection = null;
+        for (LinkSection ls : sections) {
+            if (ls.hitTest(x, y)) {
+                hitSection = ls;
+                return true;
+            }
         }
-        sinks.add(sink);
+        return false;
+    }
+
+    public boolean addPin(Pin pin) {
+        if (type != Variable.Type.UNSET) {
+            if (type != pin.variable.type) {
+                LOGGER.error("ATTEMPTED TO ADD PIN WITH INCOMPATIBLE VARIABLE TYPE");
+                return false;
+            }
+        }
+
+        if (pin.flow == Pin.Flow.OUTPUT) {
+            if (source != null) {
+                LOGGER.error("ATTEMPTED TO ADD SOURCE PIN TO LINK THAT ALREADY HAS ONE");
+                return false;
+            } else {
+                source = pin;
+                type = pin.variable.type;
+                return true;
+            }
+        } else {
+            if (sinks.contains(pin)) {
+                LOGGER.error("ATTEMPTED TO ADD SINK PIN TO LINK THAT ALREADY HAS IT ADDED");
+                return false;
+            } else {
+                sinks.add(pin);
+                type = pin.variable.type;
+                return true;
+            }
+        }
+    }
+
+    public void addSection(LinkSection section) {
+        sections.add(section);
     }
 }

@@ -9,6 +9,7 @@ public abstract class Element {
     // CONSTANTS
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    // never used...
     public static final String EID = "element";
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -18,28 +19,23 @@ public abstract class Element {
     /*
      * element id
      */
-    private final String eid;
+    public final String eid;
 
     /*
      * universal id, a unique integer value given to every element instance
      * this is mostly needed for code generation so I know which blocks are which when linking things together
      */
-    private final int uid;
+    public final int uid;
 
     /*
      *
      */
-    protected boolean hover = false;
+    public boolean hover = false;
 
     /*
      *
      */
-    protected boolean alive = true;
-
-    /*
-     *
-     */
-    protected Shape body;
+    public boolean alive = true;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTOR
@@ -72,28 +68,5 @@ public abstract class Element {
     // TODO: have draw in this class?????
     public abstract void tick(double dt);
     public abstract void draw(GraphicsContext gc);
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // GETTERS & SETTERS
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public String getEID() {
-        return eid;
-    }
-
-    public int getUID() {
-        return uid;
-    }
-
-    public Shape getBody() {
-        return body;
-    }
-
-    public boolean isAlive() {
-        return alive;
-    }
-
-    public boolean isHover() {
-        return hover;
-    }
+    public abstract boolean hitTest(int x, int y);
 }

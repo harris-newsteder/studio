@@ -1,7 +1,6 @@
 package studio.program;
 
 import studio.blocklib.BlockLibrary;
-import studio.gen.Generator;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -10,6 +9,8 @@ public final class Program {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTANTS
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // VARIABLES
@@ -29,6 +30,12 @@ public final class Program {
 
         Block b = BlockLibrary.construct("discrete_input");
         addBlock(b);
+
+        b = BlockLibrary.construct("not");
+        addBlock(b);
+
+        b = BlockLibrary.construct("discrete_output");
+        addBlock(b);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -43,7 +50,7 @@ public final class Program {
             e.tick(dt);
 
             // remove all dead elements from the list
-            if (!e.isAlive()) {
+            if (!e.alive) {
                 // TODO: make sure this doesn't happen while a javafx thread update is happening, it will nullify
                 // something that is trying to draw to the screen
                 i.remove();
@@ -56,7 +63,7 @@ public final class Program {
     }
 
     public void addBlock(Block block) {
-        for (Pin pin : block.getPins()) {
+        for (Pin pin : block.pins) {
             addElement(pin);
         }
 

@@ -6,21 +6,21 @@ public final class Camera {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /*
-     *
+     * center position of the camera
      */
-    private double cx = 0;
-    private double cy = 0;
+    public double centerX = 0;
+    public double centerY = 0;
 
     /*
-     *
+     * translation point of the camera
      */
-    private double tx = 0;
-    private double ty = 0;
+    public double translateX = 0;
+    public double translateY = 0;
 
     /*
-     *
+     * camera zoom
      */
-    private double zoom = 1;
+    public double zoom = 1;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTOR
@@ -35,37 +35,17 @@ public final class Camera {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void calculateTranslation(double width, double height) {
-        tx = cx - (width / (2 * zoom));
-        ty = cy - (height / (2 * zoom));
+        translateX = centerX - (width / (2 * zoom));
+        translateY = centerY - (height / (2 * zoom));
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // GETTERS & SETTERS
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public double getZoom() {
-        return zoom;
-    }
-
-    public double getTranslateX() {
-        return tx;
-    }
-
-    public double getTranslateY() {
-        return ty;
-    }
-
-    public double getCenterX() {
-        return cx;
-    }
-
-    public double getCenterY() {
-        return cy;
-    }
-
-    public void setCenter(double x, double y) {
-        this.cx = x;
-        this.cy = y;
+    public void setCenterPosition(double x, double y) {
+        this.centerX = x;
+        this.centerY = y;
     }
 
     public void setZoom(double zoom) {

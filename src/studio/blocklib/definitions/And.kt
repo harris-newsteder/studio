@@ -44,7 +44,7 @@ class And : BlockDefinition() {
         ins.body = Rectangle()
         ins.symbol = "M -35 -35 l 35 0 c 45 0 45 70 0 70 l -35 0 l 0 -70";
 
-        ins.pins.add(Pin.create()
+        ins.addPin(Pin.create()
                 .withParent(ins)
                 .withVariable(Variable(Variable.Type.DISCRETE_SIGNAL))
                 .atIndex(0)
@@ -52,7 +52,7 @@ class And : BlockDefinition() {
                 .onSide(Pin.Side.LEFT)
                 .attachedAt(-40, -20))
 
-        ins.pins.add(Pin.create()
+        ins.addPin(Pin.create()
                 .withParent(ins)
                 .withVariable(Variable(Variable.Type.DISCRETE_SIGNAL))
                 .atIndex(1)
@@ -60,7 +60,7 @@ class And : BlockDefinition() {
                 .onSide(Pin.Side.LEFT)
                 .attachedAt(-40, 20))
 
-        ins.pins.add(Pin.create()
+        ins.addPin(Pin.create()
                 .withParent(ins)
                 .withVariable(Variable(Variable.Type.DISCRETE_SIGNAL))
                 .atIndex(2)

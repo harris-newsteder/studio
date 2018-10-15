@@ -100,7 +100,7 @@ public class Generator {
 
         for (Element e : program.getElements()) {
             //
-            if (e.getEID() == Link.EID) {
+            if (e.eid == Link.EID) {
                 if (links.contains(e)) {
                     // this should not be possible
                     LOGGER.error("DUPLICATE LINK DETECTED IN PROGRAM ELEMENT LIST");
@@ -111,7 +111,7 @@ public class Generator {
             }
 
             //
-            if (e.getEID() == Block.EID) {
+            if (e.eid == Block.EID) {
                 if (blocks.contains(e)) {
                     // this should not be possible
                     LOGGER.error("DUPLICATE BLOCK DETECTED IN PROGRAM ELEMENT LIST");
@@ -156,18 +156,18 @@ public class Generator {
 
             // generate all the variable for the block pins
             puts(TAB + "// pins");
-            for (Pin p : b.getPins()) {
-                state(TAB + typeStringMap.get(p.getVariable().getType()) + " *p" + p.getIndex());
+            for (Pin p : b.pins) {
+                state(TAB + typeStringMap.get(p.variable.type) + " *p" + p.index);
             }
 
             // generate all the internal block variables
             puts(TAB + "// variables");
-            for (String name : b.getVars().keySet()) {
-                Variable var = b.getVars().get(name);
-                state(TAB + typeStringMap.get(var.getType()) + " " + name);
+            for (String name : b.vars.keySet()) {
+                Variable var = b.vars.get(name);
+                state(TAB + typeStringMap.get(var.type) + " " + name);
             }
 
-            state("} b_"  + b.getName() + "_t");
+            state("} b_"  + b.name + "_t");
             nl();
         }
     }
@@ -175,7 +175,7 @@ public class Generator {
     private void generateFunctions() throws Exception {
         // need to generate a function for each type of block in the program
         for (Block b : catalog) {
-            String bn = b.getName();
+            String bn = b.name;
             BlockDefinition bd = BlockLibrary.lookup(bn);
 
             String[] lines = bd.getGenFn().split("\n");
@@ -201,13 +201,13 @@ public class Generator {
 
     private void generateVariables() {
         for (Link l : links) {
-            state(typeStringMap.get(l.getSource().getVariable().getType()) + " l" + l.getUID());
+            state(typeStringMap.get(l.type) + " l" + l.uid);
         }
 
         nl();
 
         for (Block b : blocks) {
-            state("b_" + b.getName() + "_t b" + b.getUID());
+            state("b_" + b.name + "_t b" + b.uid);
         }
 
         nl();
@@ -222,28 +222,28 @@ public class Generator {
 
         for (Block b : blocks) {
             // pins
-            for (Pin p : b.getPins()) {
-                if (!p.isLinked()) continue;
-                state(TAB + "b" + b.getUID() + ".p" + p.getIndex() + " = &l" + p.getLink().getUID());
+            for (Pin p : b.pins) {
+                if (!p.linked) continue;
+                state(TAB + "b" + b.uid + ".p" + p.index + " = &l" + p.link.uid);
             }
 
             // vars
-            for (String name : b.getVars().keySet()) {
-                Variable var = b.getVars().get(name);
-                state(TAB + "(b" + b.getUID() +  "." + name + ") = " + var.getValue().toString());
+            for (String name : b.vars.keySet()) {
+                Variable var = b.vars.get(name);
+                state(TAB + "(b" + b.uid +  "." + name + ") = " + var.value.toString());
             }
 
 
 
-            BlockDefinition bd = BlockLibrary.lookup(b.getName());
+            BlockDefinition bd = BlockLibrary.lookup(b.name);
 
             String[] lines = bd.getGenInit().split("\n");
             for (String line : lines) {
                 // don't write out empty lines
                 if (line.length() == 0) continue;
 
-                line = line.replace("@VAR(", "(b.");
-                line = line.replace("@PIN(", "*(b.p");
+                line = line.replace("@VAR(", "(b" + b.uid + ".");
+                line = line.replace("@PIN(", "*(b" + b.uid + ".p");
 
                 puts(TAB + line);
             }
@@ -259,7 +259,7 @@ public class Generator {
         puts("void loop()");
         puts("{");
         for (Block b : blocks) {
-            state(TAB + "b_" + b.getName() + "_fn(&b" + b.getUID() + ")");
+            state(TAB + "b_" + b.name + "_fn(&b" + b.uid + ")");
         }
         puts("}");
     }

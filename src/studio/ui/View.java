@@ -46,7 +46,7 @@ public final class View {
     /*
      *
      */
-    private Camera camera = null;
+    public Camera camera = null;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTOR
@@ -55,8 +55,8 @@ public final class View {
     public View(UI ui) {
         this.ui = ui;
 
-        program = ui.getProgram();
-        interactionManager = ui.getInteractionManager();
+        program = ui.program;
+        interactionManager = ui.interactionManager;
         camera = new Camera();
     }
 
@@ -78,13 +78,13 @@ public final class View {
         camera.calculateTranslation(cw, ch);
 
         gc.scale(
-                camera.getZoom(),
-                camera.getZoom()
+                camera.zoom,
+                camera.zoom
         );
 
         gc.translate(
-                -camera.getTranslateX(),
-                -camera.getTranslateY()
+                -camera.translateX,
+                -camera.translateY
         );
 
         drawGrid(gc);
@@ -115,15 +115,15 @@ public final class View {
         double ch = gc.getCanvas().getHeight();
 
         // don't bother drawing a bunch of tiny points if the camera is zoomed out too far
-        if (camera.getZoom() < 0.4) return;
+        if (camera.zoom < 0.4) return;
 
         // start position of the first point (top left)
-        double sx = Math.ceil(camera.getTranslateX() / GRID_SIZE) * GRID_SIZE;
-        double sy = Math.ceil(camera.getTranslateY() / GRID_SIZE) * GRID_SIZE;
+        double sx = Math.ceil(camera.translateX / GRID_SIZE) * GRID_SIZE;
+        double sy = Math.ceil(camera.translateY / GRID_SIZE) * GRID_SIZE;
 
         // how many points to draw in the x and y directions
-        int nx = (int)Math.ceil((cw / camera.getZoom()) / GRID_SIZE);
-        int ny = (int)Math.ceil((ch / camera.getZoom()) / GRID_SIZE);
+        int nx = (int)Math.ceil((cw / camera.zoom) / GRID_SIZE);
+        int ny = (int)Math.ceil((ch / camera.zoom) / GRID_SIZE);
 
         // draw all points
         // TODO: more efficient way of doing this?
@@ -135,13 +135,5 @@ public final class View {
             }
         }
         gc.restore();
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // GETTERS & SETTERS
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public Camera getCamera() {
-        return camera;
     }
 }

@@ -1,8 +1,10 @@
-package studio.ui;
+package studio.ui.action;
 
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import studio.ui.Camera;
+import studio.ui.InteractionManager;
 
 public final class AMoveCamera extends Action {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -26,7 +28,7 @@ public final class AMoveCamera extends Action {
     public AMoveCamera(InteractionManager manager) {
         super(manager);
 
-        camera = manager.getUI().getView().getCamera();
+        camera = manager.ui.view.camera;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -37,10 +39,10 @@ public final class AMoveCamera extends Action {
     public void onMousePressed(MouseEvent event) {
         if (event.getButton() != MouseButton.MIDDLE) return;
 
-        centerStartX = camera.getCenterX();
-        centerStartY = camera.getCenterY();
-        dragStartX = mouse.getRealX();
-        dragStartY = mouse.getRealY();
+        centerStartX = camera.centerX;
+        centerStartY = camera.centerY;
+        dragStartX = mouse.realX;
+        dragStartY = mouse.realY;
 
         doPan = true;
     }
@@ -49,12 +51,12 @@ public final class AMoveCamera extends Action {
     public void onMouseDragged(MouseEvent event) {
         if (!doPan) return;
 
-        double dx = mouse.getRealX() - dragStartX;
-        double dy = mouse.getRealY() - dragStartY;
+        double dx = mouse.realX - dragStartX;
+        double dy = mouse.realY - dragStartY;
 
-        camera.setCenter(
-                centerStartX - (dx / camera.getZoom()),
-                centerStartY - (dy / camera.getZoom())
+        camera.setCenterPosition(
+                centerStartX - (dx / camera.zoom),
+                centerStartY - (dy / camera.zoom)
         );
     }
 
@@ -65,7 +67,7 @@ public final class AMoveCamera extends Action {
 
     @Override
     public void onScroll(ScrollEvent event) {
-        double zoom = camera.getZoom();
+        double zoom = camera.zoom;
 
         // TODO: better zoom-in / zoom-out control
         // TODO: center to cursor when zooming

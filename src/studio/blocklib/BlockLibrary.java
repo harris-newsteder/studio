@@ -2,6 +2,8 @@ package studio.blocklib;
 
 import studio.blocklib.definitions.And;
 import studio.blocklib.definitions.DiscreteInput;
+import studio.blocklib.definitions.DiscreteOutput;
+import studio.blocklib.definitions.Not;
 import studio.program.Block;
 
 import java.util.HashMap;
@@ -29,6 +31,8 @@ public final class BlockLibrary {
     public static void init() {
         definitions.put(And.Companion.getNAME(), new And());
         definitions.put(DiscreteInput.Companion.getNAME(), new DiscreteInput());
+        definitions.put(DiscreteOutput.Companion.getNAME(), new DiscreteOutput());
+        definitions.put(Not.Companion.getNAME(), new Not());
     }
 
     public static BlockDefinition lookup(String name) {

@@ -27,8 +27,8 @@ public final class Collider {
     public Element check(int x, int y) {
         Element ret = null;
 
-        for (Element e : manager.getProgram().getElements()) {
-            if (e.getBody().containsPoint(x, y)) {
+        for (Element e : manager.program.getElements()) {
+            if (e.hitTest(x, y)) {
                 ret = e;
             }
         }

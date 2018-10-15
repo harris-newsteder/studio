@@ -40,43 +40,54 @@ public final class Pin extends Element {
     /*
      * the block this pin belongs to
      */
-    private Block parent;
+    public Block parent;
 
     /*
      * this pin's number on the parent block, can be [0, +inf)
      */
-    private int index = -1;
+    public int index = -1;
 
     /*
      * whether or not this pin is linked
      */
-    private boolean linked = false;
+    public boolean linked = false;
 
     /*
      * this link this pin is connected to
      */
-    private Link link = null;
+    public Link link = null;
 
     /*
      * which side of the parent block this pin is on (TOP, RIGHT, BOTTOM, LEFT)
      */
-    private Side side;
+    public Side side;
 
     /*
      * whether this is an input or an output pin
      */
-    private Flow flow;
+    public Flow flow;
 
     /*
      * the signal variable associated with this pin
      */
-    private Variable variable = null;
+    public Variable variable = null;
 
     /*
      *
      */
-    private double attachX = 0;
-    private double attachY = 0;
+    public int x = 0;
+    public int y = 0;
+
+    /*
+     *
+     */
+    public Circle body;
+
+    /*
+     * the point where the pin is attached on the parent block
+     */
+    public double attachX = 0;
+    public double attachY = 0;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTOR
@@ -86,7 +97,7 @@ public final class Pin extends Element {
         super(EID);
 
         body = new Circle();
-        ((Circle)body).setRadius(6);
+        body.radius = 6;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -99,38 +110,13 @@ public final class Pin extends Element {
 
     @Override
     public void tick(double dt) {
-        double x, y;
-
-        x = parent.getBody().getX();
-        y = parent.body.getY();
-
-        switch (side) {
-            case TOP:
-                x += attachX;
-                y += attachY - LENGTH;
-                break;
-            case RIGHT:
-                x += attachX + LENGTH;
-                y += attachY;
-                break;
-            case BOTTOM:
-                x += attachX;
-                y += attachY + LENGTH;
-                break;
-            case LEFT:
-                x += attachX - LENGTH;
-                y += attachY;
-                break;
-        }
-
-        body.setPosition((int)x, (int)y);
     }
 
     @Override
     public void draw(GraphicsContext gc) {
         gc.save();
 
-        gc.translate(body.getX(), body.getY());
+        gc.translate(x, y);
 
         switch (side) {
             case TOP: gc.rotate(0); break;
@@ -164,50 +150,38 @@ public final class Pin extends Element {
         gc.restore();
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // GETTERS & SETTERS
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public int getIndex() {
-        return index;
+    @Override
+    public boolean hitTest(int x, int y) {
+        return body.hitTest(x - this.x, y - this.y);
     }
 
-    public void setIndex(int index) {
-        this.index = index;
+    public void updatePosition() {
+        x = parent.x;
+        y = parent.y;
+
+        switch (side) {
+            case TOP:
+                x += attachX;
+                y += attachY - LENGTH;
+                break;
+            case RIGHT:
+                x += attachX + LENGTH;
+                y += attachY;
+                break;
+            case BOTTOM:
+                x += attachX;
+                y += attachY + LENGTH;
+                break;
+            case LEFT:
+                x += attachX - LENGTH;
+                y += attachY;
+                break;
+        }
     }
 
-    public Flow getFlow() {
-        return flow;
-    }
-
-    public void setFlow(Flow flow) {
-        this.flow = flow;
-    }
-
-    public Variable getVariable() {
-        return variable;
-    }
-
-    public void setAttachmentPoint(double x, double y) {
-        this.attachX = x;
-        this.attachY = y;
-    }
-
-    public void link(Link link) {
-        this.link = link;
-        this.linked = true;
-    }
-
-    public Link getLink() {
-        return link;
-    }
-
-    public boolean isLinked() {
-        return linked;
-    }
-
-    public void setLinked(boolean linked) {
-        this.linked = linked;
+    public void link(Link to) {
+        link = to;
+        linked = true;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

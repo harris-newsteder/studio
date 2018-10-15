@@ -1,18 +1,35 @@
-package studio.ui;
+package studio.ui.command;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import studio.ui.InteractionManager;
+import studio.ui.Mouse;
 
 public abstract class Command {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // VARIABLES
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /*
+     *
+     */
     private boolean finished = false;
 
+    /*
+     *
+     */
+    private boolean aborted = false;
+
+    /*
+     *
+     */
     protected InteractionManager manager = null;
+
+    /*
+     *
+     */
     protected Mouse mouse = null;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -21,7 +38,7 @@ public abstract class Command {
 
     public Command(InteractionManager manager) {
         this.manager = manager;
-        this.mouse = manager.getMouse();
+        this.mouse = manager.mouse;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -52,11 +69,20 @@ public abstract class Command {
         finished = true;
     }
 
+    protected void abort() {
+        aborted = true;
+        finish();
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // GETTERS & SETTERS
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public boolean isFinished() {
         return finished;
+    }
+
+    public boolean isAborted() {
+        return aborted;
     }
 }

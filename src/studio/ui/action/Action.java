@@ -1,9 +1,11 @@
-package studio.ui;
+package studio.ui.action;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import studio.ui.InteractionManager;
+import studio.ui.Mouse;
 
 public abstract class Action {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -21,7 +23,7 @@ public abstract class Action {
 
     public Action(InteractionManager manager) {
         this.manager = manager;
-        this.mouse = manager.getMouse();
+        this.mouse = manager.mouse;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

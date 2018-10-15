@@ -3,9 +3,15 @@ package studio.ui;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.*;
-import studio.program.Block;
-import studio.program.Element;
-import studio.program.Program;
+import studio.program.*;
+import studio.ui.action.ADiagnostics;
+import studio.ui.action.AGenerateProgram;
+import studio.ui.action.AMoveCamera;
+import studio.ui.action.Action;
+import studio.ui.command.CBlockDrag;
+import studio.ui.command.CLink;
+import studio.ui.command.CLinkDrag;
+import studio.ui.command.Command;
 
 import java.util.ArrayList;
 
@@ -25,37 +31,37 @@ public final class InteractionManager {
     /*
      *
      */
-    private UI ui = null;
+    public UI ui = null;
 
     /*
      *
      */
-    private Program program = null;
+    public Program program = null;
 
     /*
      *
      */
-    private Canvas canvas = null;
+    public Canvas canvas = null;
 
     /*
      *
      */
-    private Camera camera = null;
+    public Camera camera = null;
 
     /*
      *
      */
-    private Mouse mouse = null;
+    public Mouse mouse = null;
 
     /*
      *
      */
-    private Collider collider = null;
+    public Collider collider = null;
 
     /*
      *
      */
-    private Element hover = null;
+    public Element hover = null;
 
     /*
      *
@@ -83,15 +89,17 @@ public final class InteractionManager {
 
     public InteractionManager(UI ui) {
         this.ui = ui;
-        program = ui.getProgram();
-        canvas = ui.getCanvas();
-        camera = ui.getView().getCamera();
+        program = ui.program;
+        canvas = ui.canvas;
+        camera = ui.view.camera;
         mouse = new Mouse();
         collider = new Collider(this);
         commandTimeline = new ArrayList<>();
 
         actions = new ArrayList<>();
         actions.add(new AMoveCamera(this));
+        actions.add(new AGenerateProgram(this));
+        actions.add(new ADiagnostics(this));
 
         registerEvents(canvas);
     }
@@ -111,8 +119,11 @@ public final class InteractionManager {
             activeCommand.tick(dt);
 
             if (activeCommand.isFinished()) {
-                commandTimeline.add(activeCommand);
-                timelinePosition++;
+                if (!activeCommand.isAborted()) {
+                    commandTimeline.add(activeCommand);
+                    timelinePosition++;
+                }
+
                 activeCommand = null;
             }
         }
@@ -181,6 +192,16 @@ public final class InteractionManager {
             activeCommand.onMouseClicked(event);
             return;
         }
+
+        if (event.getButton() == MouseButton.PRIMARY) {
+            if (hover != null) {
+                if (hover.eid == Pin.EID) {
+                    activate(new CLink(this));
+                }
+            } else {
+
+            }
+        }
     }
 
     private void onMouseDragged(MouseEvent event) {
@@ -199,9 +220,12 @@ public final class InteractionManager {
             if (hover == null) {
 
             } else {
-                switch (hover.getEID()) {
+                switch (hover.eid) {
                     case Block.EID:
                         activate(new CBlockDrag(this));
+                        break;
+                    case Link.EID:
+                        activate(new CLinkDrag(this));
                         break;
                 }
             }
@@ -292,8 +316,8 @@ public final class InteractionManager {
     private void updateMouse(int x, int y) {
         mouse.setRealPosition(x, y);
         mouse.setViewPosition(
-                (int)(camera.getTranslateX() + (x / camera.getZoom())),
-                (int)(camera.getTranslateY() + (y / camera.getZoom()))
+                (int)(camera.translateX + (x / camera.zoom)),
+                (int)(camera.translateY + (y / camera.zoom))
         );
     }
 
@@ -301,7 +325,7 @@ public final class InteractionManager {
      * checks to see if the mouse's new position interacts with any on screen elements
      */
     private void updateHover() {
-        Element nh = collider.check(mouse.getViewX(), mouse.getViewY());
+        Element nh = collider.check(mouse.viewX, mouse.viewY);
         Element oh = hover;
 
         if (nh != oh) {
@@ -326,25 +350,5 @@ public final class InteractionManager {
         canvas.setOnKeyReleased(  event -> {onKeyReleased(event);});
         canvas.setOnKeyTyped(     event -> {onKeyTyped(event);});
         canvas.setOnScroll(       event -> {onScroll(event);});
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // GETTERS & SETTERS
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public Element getHover() {
-        return hover;
-    }
-
-    public Program getProgram() {
-        return program;
-    }
-
-    public Mouse getMouse() {
-        return mouse;
-    }
-
-    public UI getUI() {
-        return ui;
     }
 }

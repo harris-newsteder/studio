@@ -21,22 +21,33 @@ public final class Block extends Element {
     /*
      * a list of all the pins attached to this block
      */
-    private ArrayList<Pin> pins = null;
+    public ArrayList<Pin> pins = null;
 
     /*
      * all of the internal block variables
      */
-    private HashMap<String, Variable> vars = null;
+    public HashMap<String, Variable> vars = null;
 
     /*
      * a unique name that identifies each type of block
      */
-    private final String name;
+    public final String name;
 
     /*
      * an SVGPath of this block's symbol
      */
-    private String symbol;
+    public String symbol;
+
+    /*
+     * the block's position
+     */
+    public int x;
+    public int y;
+
+    /*
+     * this block's body shape (usually just a rectangle or a circle)
+     */
+    public Shape body;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTOR
@@ -72,7 +83,7 @@ public final class Block extends Element {
     public void draw(GraphicsContext gc) {
         gc.save();
 
-        gc.translate(body.getX(), body.getY());
+        gc.translate(x, y);
 
         body.fill(gc);
         body.stroke(gc);
@@ -90,35 +101,22 @@ public final class Block extends Element {
         gc.restore();
     }
 
-    protected void addPin(Pin pin) {
-        pins.add(pin.getIndex(), pin);
+    @Override
+    public boolean hitTest(int x, int y) {
+        return body.hitTest(x - this.x, y - this.y);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // GETTERS & SETTERS
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public void moveTo(int x, int y) {
+        this.x = x;
+        this.y = y;
 
-    public void setBody(Shape body) {
-        this.body = body;
+        for (Pin pin : pins) {
+            pin.updatePosition();
+        }
     }
 
-    public String getSymbol() {
-        return symbol;
-    }
-
-    public void setSymbol(String symbol) {
-        this.symbol = symbol;
-    }
-
-    public ArrayList<Pin> getPins() {
-        return pins;
-    }
-
-    public HashMap<String, Variable> getVars() {
-        return vars;
-    }
-
-    public String getName() {
-        return name;
+    public void addPin(Pin pin) {
+        pins.add(pin.index, pin);
+        pin.updatePosition();
     }
 }
